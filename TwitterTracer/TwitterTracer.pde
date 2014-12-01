@@ -55,7 +55,7 @@ Paging page;
 
 int mode = 0, selection = 0;
 boolean userSearch = true, hashtagSearch = false;
-String user = "shaq", hashtag = "coco";
+String user = "mindenigma", hashtag = "coco";
 
 void setup()
 {
@@ -67,6 +67,10 @@ void setup()
   //cb.setOAuthConsumerSecret("xxxx");
   //cb.setOAuthAccessToken("xxxx");
   //cb.setOAuthAccessTokenSecret("xxxx");
+  cb.setOAuthConsumerKey("Ou947vAH7ChLYshAZL5dTEXxv");
+  cb.setOAuthConsumerSecret("IY6JmQdOSz9ntiev5xiwK9zKHzxYx8Z7QfXrGbpokmOOuX3dZ8");
+  cb.setOAuthAccessToken("104021001-A3C5IkcY5piAvWITYGj8jH7ztolwf31DkhCrjlSg");
+  cb.setOAuthAccessTokenSecret("MgbpIbOAeHhKctggDWHON9Ky8qjOOVOx2Lh3pxGPTGNw3"); 
   
   twitter = new TwitterFactory(cb.build()).getInstance();
   
