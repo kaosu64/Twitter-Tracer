@@ -12,7 +12,7 @@
 | Milestone 2 - Created a UI to display and select
 | tweets from a twitter user. Added buttons to 
 | jump into map display mode or timeline display
-| mode.
+| mode. Added search by date.
 ***************************************/
 
 import controlP5.*;
@@ -52,6 +52,11 @@ List<Status> statuses = null;
 Twitter twitter;
 Query query;
 Paging page;
+
+int sinceYear, sinceMonth, sinceDay,
+    untilYear, untilMonth, untilDay;
+Date dateSince = new Date();
+Date dateUntil = new Date();
 
 PImage logo;
 int mode = 0, selection = 0;
@@ -239,8 +244,30 @@ void displayUser(String user)
   
   try
   {
-    statuses = twitter.getUserTimeline(user, page);
+    //statuses = twitter.getUserTimeline(user, page);
     //println(statuses + "\n");
+    
+    // Begin search by date
+    statuses = new ArrayList<Status>();
+    List<Status> temp = twitter.getUserTimeline(user, page);
+    
+    dateSince.setYear(sinceYear-1900);
+    dateSince.setMonth(sinceMonth-1);
+    dateSince.setDate(sinceDay);
+    
+    dateUntil.setYear(untilYear-1900);
+    dateUntil.setMonth(untilMonth-1);
+    dateUntil.setDate(untilDay);
+    
+    for (int i=0; i < temp.size(); i++) 
+    {
+      Date d = temp.get(i).getCreatedAt();
+      if (d.after(dateSince) && d.before(dateUntil))
+      {
+        statuses.add(temp.get(i));
+      }
+    }
+    // End search by date
     
     for (int i=0; i<statuses.size(); i++) 
     {
