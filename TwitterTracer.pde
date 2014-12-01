@@ -53,6 +53,7 @@ Twitter twitter;
 Query query;
 Paging page;
 
+PImage logo;
 int mode = 0, selection = 0;
 boolean userSearch = true, hashtagSearch = false;
 String user = "shaq", hashtag = "coco";
@@ -61,6 +62,8 @@ void setup()
 {
   size(800, 600, OPENGL);
   
+  logo = loadImage("data/twitterLogo.png");
+  logo.resize(0, height-100);
   
   ConfigurationBuilder cb = new ConfigurationBuilder();
   //cb.setOAuthConsumerKey("xxxx");
@@ -123,6 +126,7 @@ void draw()
   
   if (mode == 0)
   {
+    image(logo, 100, 50);
     cp5.show();
     cp6.hide();
     int counter = 0;
