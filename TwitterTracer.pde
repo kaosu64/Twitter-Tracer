@@ -15,6 +15,9 @@ import controlP5.*;
 import de.fhpotsdam.unfolding.*;
 import de.fhpotsdam.unfolding.geo.*;
 import de.fhpotsdam.unfolding.utils.*;
+import de.fhpotsdam.unfolding.providers.*;
+import de.fhpotsdam.unfolding.data.*;
+import de.fhpotsdam.unfolding.marker.*;
 
 import twitter4j.util.*;
 import twitter4j.management.*;
@@ -46,7 +49,6 @@ void setup()
   //cb.setOAuthConsumerSecret("xxxx");
   //cb.setOAuthAccessToken("xxxx");
   //cb.setOAuthAccessTokenSecret("xxxx");
-
   
   Twitter twitter = new TwitterFactory(cb.build()).getInstance();
   
@@ -55,7 +57,7 @@ void setup()
   try
   {
     statuses = twitter.getUserTimeline(user, page);
-    //println(statuses + "\n");
+    println(statuses + "\n");
   }
   catch(TwitterException e)
   {
@@ -81,7 +83,7 @@ void setup()
   }
   
   //println(lon1 + " " + lat1);
-  map = new UnfoldingMap(this);
+  map = new UnfoldingMap(this, new StamenMapProvider.TonerLite());
   
   map.zoomAndPanTo(new de.fhpotsdam.unfolding.geo.Location(lat1, lon1), 12);
 
@@ -92,6 +94,7 @@ void setup()
 
 void draw()
 {
+  background(100, 100, 255);
   map.draw();
   
   ScreenPosition marker = map.getScreenPosition(loc);
