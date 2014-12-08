@@ -35,10 +35,12 @@ class TweetDisplay
   
   void display()
   {
-    String s = "testetererear";
+    //String s = "testetererear";
     //println(x + " " + y + " " + w + " " + h);
     /*fill(0);
     text(s, x, y, w, h);*/
+    textAlign(LEFT);
+    textSize(10);
     fill(0);
     text(tweetText, x, y, w, h);
     fill(0);

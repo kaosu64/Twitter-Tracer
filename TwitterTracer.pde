@@ -17,7 +17,9 @@
 | Milestone 3 - Map now displays selected tweets,
 | retweeters. Implemented GeoNames API. Functionality
 | has slowed down tremendously causing the application
-| to lag.
+| to lag. Added a minimal timeline that displays the 
+| months on which the last 100 retweets of the first 
+| selected tweet were created.
 ***************************************/
 import org.geonames.*;
 
@@ -53,12 +55,13 @@ ArrayList<ScreenPosition> markerChild = new ArrayList<ScreenPosition>();
 
 UnfoldingMap map;
 
-ControlP5 cp5, cp6;
+ControlP5 cp5, cp6, cp7;
 Textfield twitterTextField;
 Textlabel myTextlabelA, myTextlabelB, myTextlabelC;
 
 Button[] buttons;
 TweetDisplay[] tweets;
+Graph graph;
 
 List<Status> statuses = null;
 Twitter twitter;
@@ -73,6 +76,7 @@ Date dateUntil = new Date();
 PImage logo;
 int mode = 0, selection = 0;
 boolean userSearch = true, hashtagSearch = false;
+boolean mapLoaded = false, timelineLoaded = false;
 String user = "shaq", hashtag = "coco";
 
 void setup()
@@ -139,16 +143,18 @@ void setup()
     println("Error\n");
   }
   
-  
+  graph = new Graph(100,100,650,350);
   
   map = new UnfoldingMap(this, 10, 50, width-20, height-60, new StamenMapProvider.TonerLite());
   MapUtils.createDefaultEventDispatcher(this, map);
 
   cp5 = new ControlP5(this);
   cp6 = new ControlP5(this);
+  cp7 = new ControlP5(this);
   
   displayUI();
   displayMapUI();
+  displayTimelineUI();
 }
 
 void draw()
@@ -160,6 +166,8 @@ void draw()
     image(logo, 100, 50);
     cp5.show();
     cp6.hide();
+    cp7.hide();
+    
     int counter = 0;
     int num = selection;
     /*fill(205);
@@ -199,6 +207,7 @@ void draw()
     cp5.hide();
     map.draw();
     cp6.show();
+    cp7.hide();
     
     for (int i = 0; i < parentLoc.size(); i++)
     {
@@ -212,6 +221,13 @@ void draw()
       fill(0, 200, 0);
       ellipse(markerChild.get(i).x, markerChild.get(i).y, 5, 5);
     }
+  }
+  else if (mode == 2)
+  {
+    cp5.hide();
+    cp6.hide();
+    cp7.show();
+    graph.drawGraph();
   }
 }
 

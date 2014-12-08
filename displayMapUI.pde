@@ -27,10 +27,14 @@ void displayMapUI()
 
 public void main_menu()
 {
+  mapLoaded = false;
+  timelineLoaded = false;
   mode = 0;
 }
 
 public void display_timeline()
 {
-  
+  if (!timelineLoaded)
+    timeline();
+  mode = 2;
 }

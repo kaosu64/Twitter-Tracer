@@ -18,6 +18,7 @@ class Button
   
   void display()
   {
+    noStroke();
     fill(205);
     rect((x-2), (y-2), (w+4), (h+4));
     
