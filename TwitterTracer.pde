@@ -13,7 +13,13 @@
 | tweets from a twitter user. Added buttons to 
 | jump into map display mode or timeline display
 | mode. Added search by date.
+|
+| Milestone 3 - Map now displays selected tweets,
+| retweeters. Implemented GeoNames API. Functionality
+| has slowed down tremendously causing the application
+| to lag.
 ***************************************/
+import org.geonames.*;
 
 import controlP5.*;
 
@@ -34,10 +40,16 @@ import twitter4j.*;
 
 import java.util.*;
 
+ToponymSearchCriteria searchCriteria = new ToponymSearchCriteria();
+ArrayList<Retweeters> retweeters = new ArrayList<Retweeters>();
+
 de.fhpotsdam.unfolding.geo.Location euclid;
-List<de.fhpotsdam.unfolding.geo.Location> loc 
+List<de.fhpotsdam.unfolding.geo.Location> parentLoc 
 = new ArrayList<de.fhpotsdam.unfolding.geo.Location>();
-ArrayList<ScreenPosition> marker = new ArrayList<ScreenPosition>();
+List<de.fhpotsdam.unfolding.geo.Location> childLoc 
+= new ArrayList<de.fhpotsdam.unfolding.geo.Location>();
+ArrayList<ScreenPosition> markerParent = new ArrayList<ScreenPosition>();
+ArrayList<ScreenPosition> markerChild = new ArrayList<ScreenPosition>();
 
 UnfoldingMap map;
 
@@ -66,15 +78,21 @@ String user = "shaq", hashtag = "coco";
 void setup()
 {
   size(800, 600, OPENGL);
+  smooth();
+  frameRate(500);
+  
   
   logo = loadImage("data/twitterLogo.png");
   logo.resize(0, height-100);
+  
+  WebService.setUserName("mindbeef");
   
   ConfigurationBuilder cb = new ConfigurationBuilder();
   //cb.setOAuthConsumerKey("xxxx");
   //cb.setOAuthConsumerSecret("xxxx");
   //cb.setOAuthAccessToken("xxxx");
   //cb.setOAuthAccessTokenSecret("xxxx");
+  
   
   twitter = new TwitterFactory(cb.build()).getInstance();
   
@@ -83,37 +101,45 @@ void setup()
   try
   {
     statuses = twitter.getUserTimeline(user, page);
+    
+    buttons = new Button[statuses.size()];
+    tweets = new TweetDisplay[statuses.size()];
+    
+    for (int i=0; i<statuses.size(); i++) 
+    {
+      buttons[i] = new Button();
+      tweets[i] = new TweetDisplay();
+      
+      Status status = (Status)statuses.get(i);
+      
+      tweets[i].setUser(status.getUser().getScreenName());
+      tweets[i].setText(status.getText());
+      tweets[i].setProfilePic(status.getUser().getBiggerProfileImageURL());
+      tweets[i].setRetweetCount(status.getRetweetCount());
+      tweets[i].setTweetId(status.getId());
+      tweets[i].setUserLoc(status.getUser().getLocation());
+     // List<Status> test = twitter.getRetweets(tweets[i].getTweetId());
+      //println(status.getUser().getLocation());
+      //println("Tweet " + i + ": " + status.getText() + "\t ID: " + status.getId());
+      
+      if (status.getGeoLocation() != null)
+      {
+        tweets[i].setCoordStatus(true);
+        tweets[i].setCoords(status.getGeoLocation().getLatitude(), status.getGeoLocation().getLongitude());
+      }
+      else
+      {
+        userParentLocation(i, tweets[i].getUserLoc());
+        //println("from main: " + tweets[i].getLat() + " " + tweets[i].getLon() + "\n");
+      }
+    }
   }
   catch(TwitterException e)
   {
-    println("User doesn't exist\n");
+    println("Error\n");
   }
   
-  buttons = new Button[statuses.size()];
-  tweets = new TweetDisplay[statuses.size()];
   
-  for (int i=0; i<statuses.size(); i++) 
-  {
-    buttons[i] = new Button();
-    tweets[i] = new TweetDisplay();
-    
-    Status status = (Status)statuses.get(i);
-    
-    tweets[i].setUser(status.getUser().getScreenName());
-    tweets[i].setText(status.getText());
-    tweets[i].setProfilePic(status.getUser().getBiggerProfileImageURL());
-    tweets[i].setRetweetCount(status.getRetweetCount());
-    
-    if (status.getGeoLocation() != null)
-    {
-      tweets[i].setCoordStatus(true);
-      tweets[i].setCoords(status.getGeoLocation().getLatitude(), status.getGeoLocation().getLongitude());
-    }
-    else
-    {
-      tweets[i].setCoordStatus(false);
-    }
-  }
   
   map = new UnfoldingMap(this, 10, 50, width-20, height-60, new StamenMapProvider.TonerLite());
   MapUtils.createDefaultEventDispatcher(this, map);
@@ -174,11 +200,17 @@ void draw()
     map.draw();
     cp6.show();
     
-    for (int i = 0; i < loc.size(); i++)
+    for (int i = 0; i < parentLoc.size(); i++)
     {
-      marker.add(map.getScreenPosition(loc.get(i)));
-      fill(200, 0, 0, 100);
-      ellipse(marker.get(i).x, marker.get(i).y, 20, 20);
+      markerParent.add(map.getScreenPosition(parentLoc.get(i)));
+      fill(200, 0, 0);
+      ellipse(markerParent.get(i).x, markerParent.get(i).y, 5, 5);
+    }
+    for (int i = 0; i < childLoc.size(); i++)
+    {
+      markerChild.add(map.getScreenPosition(childLoc.get(i)));
+      fill(0, 200, 0);
+      ellipse(markerChild.get(i).x, markerChild.get(i).y, 5, 5);
     }
   }
 }
@@ -241,6 +273,7 @@ void controlEvent(ControlEvent theEvent)
 
 void displayUser(String user)
 {
+  statuses.clear();
   
   try
   {
@@ -280,6 +313,12 @@ void displayUser(String user)
       tweets[i].setText(status.getText());
       tweets[i].setProfilePic(status.getUser().getBiggerProfileImageURL());
       tweets[i].setRetweetCount(status.getRetweetCount());
+      tweets[i].setTweetId(status.getId());
+      tweets[i].setUserLoc(status.getUser().getLocation());
+      
+      println("Tweet " + i + ": " + status.getText() + "\t ID: " + status.getId());
+      
+      
       
       if (status.getGeoLocation() != null)
       {
@@ -289,7 +328,10 @@ void displayUser(String user)
       }
       else
       {
-        tweets[i].setCoordStatus(false);
+        userParentLocation(i, tweets[i].getUserLoc());
+        //println(status.getUser().getLocation());
+        //println(i + " from main: " + tweets[i].getLat() + " " + tweets[i].getLon() + "\n");
+        //tweets[i].setCoordStatus(false);
       }
     }
   }
@@ -301,8 +343,9 @@ void displayUser(String user)
 
 void displayHashtag(String hashtag)
 {
-  marker.clear();
-  query = new Query(hashtag);
+  markerParent.clear();
+  markerChild.clear();
+  query = new Query("#" + hashtag);
   query.setCount(20);
   
   try
@@ -321,6 +364,8 @@ void displayHashtag(String hashtag)
       tweets[i].setText(status.getText());
       tweets[i].setProfilePic(status.getUser().getBiggerProfileImageURL());
       tweets[i].setRetweetCount(status.getRetweetCount());
+      tweets[i].setTweetId(status.getId());
+      tweets[i].setUserLoc(status.getUser().getLocation());
       
       if (status.getGeoLocation() != null)
       {
@@ -330,7 +375,11 @@ void displayHashtag(String hashtag)
       }
       else
       {
-        tweets[i].setCoordStatus(false);
+        userParentLocation(i, tweets[i].getUserLoc());
+        //println(tweets[i].getUserLoc());
+        //println(status.getUser().getLocation());
+        //println(i + " from main: " + tweets[i].getLat() + " " + tweets[i].getLon() + "\n");
+        //tweets[i].setCoordStatus(false);
       }
     }
   }

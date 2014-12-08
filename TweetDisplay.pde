@@ -8,8 +8,10 @@ class TweetDisplay
   private int retweetCount;
   private String username;
   private String tweetText;
+  private String location;
   private double latitude;
   private double longitude;
+  private long tweetId;
   private boolean hasCoords;
   private PImage profilePic;
   
@@ -57,10 +59,20 @@ class TweetDisplay
     this.tweetText = tweetText;
   }
   
+  void setUserLoc(String location)
+  {
+    this.location = location;
+  }
+  
   void setProfilePic(String url)
   {
-    profilePic = loadImage(url, "png");
-    profilePic.resize(0, 66);
+    this.profilePic = loadImage(url, "png");
+    this.profilePic.resize(0, 66);
+  }
+  
+  void setTweetId(long tweetId)
+  {
+    this.tweetId = tweetId;
   }
   
   void setRetweetCount(int retweetCount)
@@ -79,6 +91,11 @@ class TweetDisplay
     this.hasCoords = status;
   }
   
+  String getUserLoc()
+  {
+    return this.location;
+  }
+  
   double getLat()
   {
     return this.latitude;
@@ -87,6 +104,11 @@ class TweetDisplay
   double getLon()
   {
     return this.longitude;
+  }
+  
+  long getTweetId()
+  {
+    return this.tweetId;
   }
   
   boolean getCoordStatus()
