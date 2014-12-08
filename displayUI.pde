@@ -175,8 +175,11 @@ public void previous()
 
 public void displaymap()
 {
-  loc.clear();
-  marker.clear();
+  parentLoc.clear();
+  childLoc.clear();
+  markerParent.clear();
+  markerChild.clear();
+  retweeters.clear();
   
   boolean hasLocations = false;
   
@@ -184,7 +187,16 @@ public void displaymap()
   {
     if(buttons[i].getHighlight() == true && tweets[i].getCoordStatus() == true)
     {
-      loc.add(new de.fhpotsdam.unfolding.geo.Location(tweets[i].getLat(), tweets[i].getLon()));
+      setRetweeters(i);
+      /*
+      for(int j = 0; j < retweeters.size(); j++)
+      {
+        //println(retweeters.get(j).getLat() + " " + retweeters.get(j).getLon());
+        loc.add(new de.fhpotsdam.unfolding.geo.Location(retweeters.get(j).getLat(),
+                                                        retweeters.get(j).getLon()));
+      }*/
+      
+      parentLoc.add(new de.fhpotsdam.unfolding.geo.Location(tweets[i].getLat(), tweets[i].getLon()));
 
       hasLocations = true;
     }
@@ -192,8 +204,8 @@ public void displaymap()
   
   if(hasLocations == true)
   {
-    euclid = GeoUtils.getEuclideanCentroid(loc);
-    map.zoomAndPanTo(euclid, 12);
+    euclid = GeoUtils.getEuclideanCentroid(childLoc);
+    //map.zoomAndPanTo(euclid, 1);
   }
   
   mode = 1;
