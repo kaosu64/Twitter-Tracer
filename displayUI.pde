@@ -208,10 +208,51 @@ public void displaymap()
     //map.zoomAndPanTo(euclid, 1);
   }
   
+  mapLoaded = true;
   mode = 1;
 }
 
 public void timeline()
 {
+  // Initiate float list
+  FloatList fl = new FloatList();
+  for (int i = 0; i < 12; i++)
+  {
+    fl.append(0);
+  }
   
+  // Get first selected tweet
+  int n = 0;
+  while (n < tweets.length && buttons[n].getHighlight() == false)
+  {
+    n++;
+  }
+  
+  if (n < tweets.length)
+  {
+    List<Status> rtw = new ArrayList<Status>();
+    Status tw = statuses.get(n);
+    try {
+      if (tw.isRetweet())
+        rtw = twitter.getRetweets(tw.getRetweetedStatus().getId());
+      else
+        rtw = twitter.getRetweets(tw.getId());
+    }
+    catch (TwitterException e)
+    {
+      println("Error: "+e+"\n");
+    }
+    
+    // Add data to the float list
+    ArrayList<Date> dList = new ArrayList<Date>();
+    for (Status s : rtw)
+    {
+      fl.add(s.getCreatedAt().getMonth(), 1);
+    }
+    
+    graph.setPoints(fl);
+  }
+  
+  timelineLoaded = true;
+  mode = 2;
 }
