@@ -6,20 +6,20 @@
 void displayUI()
 {
   twitterTextField = cp5.addTextfield("input")
-     .setPosition(350, 50)
+     .setPosition(500, 50)
      .setSize(175, 30)
      .setFont(createFont("arial", 25))
-     .setColorBackground(color(0, 100))
-     .setColorForeground(color(255, 100));
+     .setColorBackground(color(0, 100));
+     //.setColorForeground(color(255, 100));
   
   cp5.addBang("user")
-     .setPosition(530, 50)
+     .setPosition(680, 50)
      .setSize(100, 30)
      .getCaptionLabel().align(ControlP5.CENTER, ControlP5.CENTER);
   cp5.getTooltip().register("user","Enters the username to be searched.");
 
   cp5.addBang("hashtag")
-     .setPosition(635, 50)
+     .setPosition(785, 50)
      .setSize(100, 30)
      .getCaptionLabel().align(ControlP5.CENTER, ControlP5.CENTER);
   cp5.getTooltip().register("hashtag","Enters the hashtag to be searched.");
@@ -27,7 +27,7 @@ void displayUI()
   // Date selection
   Group g1 = cp5.addGroup("sinceGroup")
                 .setCaptionLabel("since date")
-                .setPosition(280,140)
+                .setPosition(430,140)
                 .setWidth(150)
                 .setBarHeight(30)
                 .setBackgroundColor(color(0, 200))
@@ -67,7 +67,7 @@ void displayUI()
   
   Group g2 = cp5.addGroup("untilGroup")
                 .setCaptionLabel("until date")
-                .setPosition(460,140)
+                .setPosition(610,140)
                 .setWidth(150)
                 .setBarHeight(30)
                 .setBackgroundColor(color(0, 200))
@@ -106,44 +106,44 @@ void displayUI()
   // End date selection
   
   cp5.addBang("previous")
-     .setPosition(150, 315)
-     .setSize(50, 50)
+     .setPosition(250, 315)
+     .setSize(75, 50)
      .getCaptionLabel().align(ControlP5.CENTER, ControlP5.CENTER);
   cp5.getTooltip().register("previous","Show the previous 5 tweets.");
   
   cp5.addBang("next")
-     .setPosition(650, 315)
-     .setSize(50, 50)
+     .setPosition(825, 315)
+     .setSize(75, 50)
      .getCaptionLabel().align(ControlP5.CENTER, ControlP5.CENTER);
   cp5.getTooltip().register("next","Show the next 5 tweets.");
   
   cp5.addBang("displaymap")
-     .setPosition(227, 540)
+     .setPosition(377, 580)
      .setSize(195, 50)
      .getCaptionLabel().align(ControlP5.CENTER, ControlP5.CENTER);
   cp5.getTooltip().register("map","Display selected tweets on a map.");
  
   cp5.addBang("timeline")
-     .setPosition(430, 540)
+     .setPosition(580, 580)
      .setSize(195, 50)
      .getCaptionLabel().align(ControlP5.CENTER, ControlP5.CENTER);
   cp5.getTooltip().register("timeline","Display selected tweets on a timeline.");
   
   cp5.addTextlabel("labelA")
      .setText("Enter a username or hashtag: ")
-     .setPosition(50,50)
+     .setPosition(200,50)
      .setColorValue(#ffffff)
      .setFont(createFont("sans-serif",20));
   
   cp5.addTextlabel("labelB")
      .setText("Select a time period: ")
-     .setPosition(50,100)
+     .setPosition(200,100)
      .setColorValue(#ffffff)
      .setFont(createFont("sans-serif",20));
      
   cp5.addTextlabel("labelC")
      .setText("Select a tweet: ")
-     .setPosition(50,150)
+     .setPosition(200,150)
      .setColorValue(#ffffff)
      .setFont(createFont("sans-serif",20));
 }
@@ -180,32 +180,52 @@ public void displaymap()
   markerParent.clear();
   markerChild.clear();
   retweeters.clear();
+  lineMarkers.clear();
   
   boolean hasLocations = false;
   
   for(int i = 0; i < tweets.length; i++)
   {
-    if(buttons[i].getHighlight() == true && tweets[i].getCoordStatus() == true)
+    if(buttons[i].getHighlight() == true)
     {
-      setRetweeters(i);
-      /*
-      for(int j = 0; j < retweeters.size(); j++)
-      {
-        //println(retweeters.get(j).getLat() + " " + retweeters.get(j).getLon());
-        loc.add(new de.fhpotsdam.unfolding.geo.Location(retweeters.get(j).getLat(),
-                                                        retweeters.get(j).getLon()));
-      }*/
       
-      parentLoc.add(new de.fhpotsdam.unfolding.geo.Location(tweets[i].getLat(), tweets[i].getLon()));
-
-      hasLocations = true;
+      if(tweets[i].getCoordStatus() == true)
+      {
+        
+        setRetweeters(i);
+        
+        parentLoc.add(new de.fhpotsdam.unfolding.geo.Location(tweets[i].getLat(), tweets[i].getLon()));
+  
+        hasLocations = true;
+      }
+      else if (tweets[i].getCoordStatus() == false)
+      {
+        userParentLocation(i, tweets[i].getUserLoc());
+        
+        setRetweeters(i);
+        
+        parentLoc.add(new de.fhpotsdam.unfolding.geo.Location(tweets[i].getLat(), tweets[i].getLon()));
+  
+      }
     }
   }
+  
+  for(int i = 0; i < parentLoc.size(); i++)
+  {
+    for(int j = 0; j < childLoc.size(); j++)
+    {
+      SimpleLinesMarker slm = new SimpleLinesMarker(parentLoc.get(i), childLoc.get(j));
+      slm.setStrokeWeight(2);
+      lineMarkers.add(slm);
+    }
+  }
+  
+  map.addMarkers(lineMarkers);
   
   if(hasLocations == true)
   {
     euclid = GeoUtils.getEuclideanCentroid(childLoc);
-    //map.zoomAndPanTo(euclid, 1);
+    
   }
   
   mapLoaded = true;
