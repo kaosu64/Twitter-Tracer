@@ -128,25 +128,48 @@ void setup()
       tweets[i] = new TweetDisplay();
       
       Status status = (Status)statuses.get(i);
+      //println(status.getId() + " " + status.getText());
+      if(status.isRetweet())
+      {
+        tweets[i].setTweetId(status.getRetweetedStatus().getId());
+        tweets[i].setUserLoc(status.getRetweetedStatus().getUser().getLocation());
+        //println(status.getRetweetedStatus().getId() + " " + status.getRetweetedStatus().getText());
+        if (status.getRetweetedStatus().getGeoLocation() != null)
+        {
+          tweets[i].setCoordStatus(true);
+          tweets[i].setCoords(status.getRetweetedStatus().getGeoLocation().getLatitude(), 
+                              status.getRetweetedStatus().getGeoLocation().getLongitude());
+        }
+      }
+      else
+      {
+        tweets[i].setTweetId(status.getId());
+        tweets[i].setUserLoc(status.getUser().getLocation());
+        
+        if (status.getGeoLocation() != null)
+        {
+          tweets[i].setCoordStatus(true);
+          tweets[i].setCoords(status.getGeoLocation().getLatitude(), status.getGeoLocation().getLongitude());
+        }
+      }
+      /*while(status.isRetweet())
+      {
+        tweets[i].setTweetId(status.getId());
+      }*/
       
       tweets[i].setUser(status.getUser().getScreenName());
       tweets[i].setText(status.getText());
       tweets[i].setProfilePic(status.getUser().getBiggerProfileImageURL());
       tweets[i].setRetweetCount(status.getRetweetCount());
-      tweets[i].setTweetId(status.getId());
-      tweets[i].setUserLoc(status.getUser().getLocation());
-      
       Date dtemp = status.getCreatedAt();
-<<<<<<< HEAD
+      
+
       tweets[i].setDate(dtemp.getDate(), dtemp.getMonth()+1, dtemp.getYear()+1900);
-=======
-      tweets[i].setDate(dtemp.getDay(), dtemp.getMonth(), dtemp.getYear()+1900);
->>>>>>> ebcce9a6612e6baaee37e6dbc0be4f6d8a3996c6
       
      // List<Status> test = twitter.getRetweets(tweets[i].getTweetId());
       //println(status.getUser().getLocation());
       //println("Tweet " + i + ": " + status.getText() + "\t ID: " + status.getId());
-      
+      /*
       if (status.getGeoLocation() != null)
       {
         tweets[i].setCoordStatus(true);
@@ -154,9 +177,9 @@ void setup()
       }
       else
       {
-        userParentLocation(i, tweets[i].getUserLoc());
+        //userParentLocation(i, tweets[i].getUserLoc());
         //println("from main: " + tweets[i].getLat() + " " + tweets[i].getLon() + "\n");
-      }
+      }*/
     }
   }
   catch(TwitterException e)
@@ -259,11 +282,7 @@ void draw()
     for(int i = 0; i < hashtagLoc.size(); i++)
     {
       ScreenPosition hash = map.getScreenPosition(hashtagLoc.get(i));
-<<<<<<< HEAD
       fill(102, 51, 255, 180);
-=======
-      fill(238, 137, 40, 150);
->>>>>>> ebcce9a6612e6baaee37e6dbc0be4f6d8a3996c6
       ellipse(hash.x, hash.y, 10, 10);
     }
   }
@@ -378,24 +397,43 @@ void displayUser(String user)
       
       Status status = (Status)statuses.get(i);
       
+      if(status.isRetweet())
+      {
+        tweets[i].setTweetId(status.getRetweetedStatus().getId());
+        tweets[i].setUserLoc(status.getRetweetedStatus().getUser().getLocation());
+        //println(status.getRetweetedStatus().getId() + " " + status.getRetweetedStatus().getText());
+        if (status.getRetweetedStatus().getGeoLocation() != null)
+        {
+          tweets[i].setCoordStatus(true);
+          tweets[i].setCoords(status.getRetweetedStatus().getGeoLocation().getLatitude(), 
+                              status.getRetweetedStatus().getGeoLocation().getLongitude());
+        }
+      }
+      else
+      {
+        tweets[i].setTweetId(status.getId());
+        tweets[i].setUserLoc(status.getUser().getLocation());
+        
+        if (status.getGeoLocation() != null)
+        {
+          tweets[i].setCoordStatus(true);
+          tweets[i].setCoords(status.getGeoLocation().getLatitude(), status.getGeoLocation().getLongitude());
+        }
+      }
+      
       tweets[i].setUser(status.getUser().getScreenName());
       tweets[i].setText(status.getText());
       tweets[i].setProfilePic(status.getUser().getBiggerProfileImageURL());
       tweets[i].setRetweetCount(status.getRetweetCount());
-      tweets[i].setTweetId(status.getId());
-      tweets[i].setUserLoc(status.getUser().getLocation());
       
       Date dtemp = status.getCreatedAt();
-<<<<<<< HEAD
+      
       tweets[i].setDate(dtemp.getDate(), dtemp.getMonth()+1, dtemp.getYear()+1900);
-=======
-      tweets[i].setDate(dtemp.getDay(), dtemp.getMonth(), dtemp.getYear()+1900);
->>>>>>> ebcce9a6612e6baaee37e6dbc0be4f6d8a3996c6
       
       println("Tweet " + i + ": " + status.getText() + "\t ID: " + status.getId());
       
       
-      
+      /*
       if (status.getGeoLocation() != null)
       {
         tweets[i].setCoordStatus(true);
@@ -408,7 +446,7 @@ void displayUser(String user)
         //println(status.getUser().getLocation());
         //println(i + " from main: " + tweets[i].getLat() + " " + tweets[i].getLon() + "\n");
         //tweets[i].setCoordStatus(false);
-      }
+      }*/
     }
   }
   catch(TwitterException e)
@@ -436,20 +474,40 @@ void displayHashtag(String hashtag)
       
       Status status = (Status)statuses.get(i);
       
+      if(status.isRetweet())
+      {
+        tweets[i].setTweetId(status.getRetweetedStatus().getId());
+        tweets[i].setUserLoc(status.getRetweetedStatus().getUser().getLocation());
+        //println(status.getRetweetedStatus().getId() + " " + status.getRetweetedStatus().getText());
+        if (status.getRetweetedStatus().getGeoLocation() != null)
+        {
+          tweets[i].setCoordStatus(true);
+          tweets[i].setCoords(status.getRetweetedStatus().getGeoLocation().getLatitude(), 
+                              status.getRetweetedStatus().getGeoLocation().getLongitude());
+        }
+      }
+      else
+      {
+        tweets[i].setTweetId(status.getId());
+        tweets[i].setUserLoc(status.getUser().getLocation());
+        
+        if (status.getGeoLocation() != null)
+        {
+          tweets[i].setCoordStatus(true);
+          tweets[i].setCoords(status.getGeoLocation().getLatitude(), status.getGeoLocation().getLongitude());
+        }
+      }
+      
       tweets[i].setUser(status.getUser().getScreenName());
       tweets[i].setText(status.getText());
       tweets[i].setProfilePic(status.getUser().getBiggerProfileImageURL());
       tweets[i].setRetweetCount(status.getRetweetCount());
-      tweets[i].setTweetId(status.getId());
-      tweets[i].setUserLoc(status.getUser().getLocation());
       
       Date dtemp = status.getCreatedAt();
-<<<<<<< HEAD
-      tweets[i].setDate(dtemp.getDate(), dtemp.getMonth()+1, dtemp.getYear()+1900);
-=======
-      tweets[i].setDate(dtemp.getDay(), dtemp.getMonth(), dtemp.getYear()+1900);
->>>>>>> ebcce9a6612e6baaee37e6dbc0be4f6d8a3996c6
       
+      tweets[i].setDate(dtemp.getDate(), dtemp.getMonth()+1, dtemp.getYear()+1900);
+      
+      /*
       if (status.getGeoLocation() != null)
       {
         tweets[i].setCoordStatus(true);
@@ -463,7 +521,7 @@ void displayHashtag(String hashtag)
         //println(status.getUser().getLocation());
         //println(i + " from main: " + tweets[i].getLat() + " " + tweets[i].getLon() + "\n");
         //tweets[i].setCoordStatus(false);
-      }
+      }*/
     }
   }
   catch(TwitterException e)
