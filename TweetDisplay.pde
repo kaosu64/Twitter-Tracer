@@ -5,6 +5,9 @@ class TweetDisplay
   private int y;
   private int w;
   private int h;
+  private int day;
+  private int month;
+  private int year;
   private int retweetCount;
   private String username;
   private String tweetText;
@@ -44,10 +47,12 @@ class TweetDisplay
     fill(0);
     text(tweetText, x, y, w, h);
     fill(0);
-    text("@"+username, x, y+h+2, w/2-9, h-32);
+    text("@"+username, x, y+h+2, w/2-34, h-32);
     fill(0);
-    text("Retweets: "+retweetCount, x+w/2-7, y+h+2, w/2+8, h-32);
-    
+    text("Retweets: "+retweetCount, x+w/2-32, y+h+2, w/2-67, h-32);
+    fill(0);
+    text("Date: "+month+"/"+day+"/"+year, x+w/2+87, y+h+2, w/2-85, h-32);
+    //rect(x+w/2+87, y+h+2, w/2-85, h-32);
     image(profilePic, x-69, y); 
   }
   
@@ -93,6 +98,12 @@ class TweetDisplay
     this.hasCoords = status;
   }
   
+  void setDate(int day, int month, int year)
+  {
+    this.day = day;
+    this.month = month;
+    this.year = year;
+  }
   String getUserLoc()
   {
     return this.location;

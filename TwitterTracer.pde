@@ -20,6 +20,13 @@
 | to lag. Added a minimal timeline that displays the 
 | months on which the last 100 retweets of the first 
 | selected tweet were created.
+|
+| Milestone 4 - Connected a line from a main tweet to its
+| retweeters. Fixed the issue where the markers were in a
+| fixed location and woudn't move with the map. Added a
+| feature where the user can display on the map the
+| locations of certain hashtags. Also increased the size
+| of the application. 
 ***************************************/
 import org.geonames.*;
 
@@ -46,17 +53,24 @@ ToponymSearchCriteria searchCriteria = new ToponymSearchCriteria();
 ArrayList<Retweeters> retweeters = new ArrayList<Retweeters>();
 
 de.fhpotsdam.unfolding.geo.Location euclid;
+
 List<de.fhpotsdam.unfolding.geo.Location> parentLoc 
 = new ArrayList<de.fhpotsdam.unfolding.geo.Location>();
+
 List<de.fhpotsdam.unfolding.geo.Location> childLoc 
 = new ArrayList<de.fhpotsdam.unfolding.geo.Location>();
-ArrayList<ScreenPosition> markerParent = new ArrayList<ScreenPosition>();
-ArrayList<ScreenPosition> markerChild = new ArrayList<ScreenPosition>();
+
+List<de.fhpotsdam.unfolding.geo.Location> hashtagLoc
+= new ArrayList<de.fhpotsdam.unfolding.geo.Location>();
+
+List<ScreenPosition> markerParent = new ArrayList<ScreenPosition>();
+List<ScreenPosition> markerChild = new ArrayList<ScreenPosition>();
+List<Marker> lineMarkers = new ArrayList<Marker>();
 
 UnfoldingMap map;
 
 ControlP5 cp5, cp6, cp7;
-Textfield twitterTextField;
+Textfield twitterTextField, hashtagMapTextField;
 Textlabel myTextlabelA, myTextlabelB, myTextlabelC;
 
 Button[] buttons;
@@ -77,27 +91,26 @@ PImage logo;
 int mode = 0, selection = 0;
 boolean userSearch = true, hashtagSearch = false;
 boolean mapLoaded = false, timelineLoaded = false;
-String user = "shaq", hashtag = "coco";
+String user = "mindenigma", hashtag = "coco", hashtagMap;
 
 void setup()
 {
-  size(800, 600, OPENGL);
+  size(1152, 720, OPENGL);
   smooth();
   frameRate(500);
   
+  WebService.setUserName("mindbeef");
+  //WebService.setUserName("haalbaar");
   
   logo = loadImage("data/twitterLogo.png");
   logo.resize(0, height-100);
-  
-  WebService.setUserName("mindbeef");
   
   ConfigurationBuilder cb = new ConfigurationBuilder();
   //cb.setOAuthConsumerKey("xxxx");
   //cb.setOAuthConsumerSecret("xxxx");
   //cb.setOAuthAccessToken("xxxx");
   //cb.setOAuthAccessTokenSecret("xxxx");
-  
-  
+ 
   twitter = new TwitterFactory(cb.build()).getInstance();
   
   page = new Paging (1,20);
@@ -122,6 +135,10 @@ void setup()
       tweets[i].setRetweetCount(status.getRetweetCount());
       tweets[i].setTweetId(status.getId());
       tweets[i].setUserLoc(status.getUser().getLocation());
+      
+      Date dtemp = status.getCreatedAt();
+      tweets[i].setDate(dtemp.getDate(), dtemp.getMonth()+1, dtemp.getYear()+1900);
+      
      // List<Status> test = twitter.getRetweets(tweets[i].getTweetId());
       //println(status.getUser().getLocation());
       //println("Tweet " + i + ": " + status.getText() + "\t ID: " + status.getId());
@@ -145,9 +162,13 @@ void setup()
   
   graph = new Graph(100,100,650,350);
   
-  map = new UnfoldingMap(this, 10, 50, width-20, height-60, new StamenMapProvider.TonerLite());
+  map = new UnfoldingMap(this, 10, 50, width-20, height-60, new StamenMapProvider.WaterColor());
+  //map = new UnfoldingMap(this, new StamenMapProvider.WaterColor());
+  map.setTweening(true);
   MapUtils.createDefaultEventDispatcher(this, map);
-
+  map.zoomAndPanTo(new de.fhpotsdam.unfolding.geo.Location(0.0,0.0), 2);
+  //map.setScaleRange(1400.0, 1000.0);
+  
   cp5 = new ControlP5(this);
   cp6 = new ControlP5(this);
   cp7 = new ControlP5(this);
@@ -163,7 +184,7 @@ void draw()
   
   if (mode == 0)
   {
-    image(logo, 100, 50);
+    image(logo, 200, 50);
     cp5.show();
     cp6.hide();
     cp7.hide();
@@ -186,16 +207,18 @@ void draw()
     fill(205);
     rect(300, 156, 319, 48);
     fill(205);
-    rect(300, 206, 150, 16);
+    rect(425, 246, 125, 16);
+    fill(0);
+    text("123456789012345",425, 246, 150, 16);
     fill(205);
-    rect(452, 206, 167, 16);*/
+    rect(552, 246, 92, 16);*/
     if(userSearch != false || hashtagSearch != false)
     {
       while(counter < 5)
       {
-        buttons[num].setDimensions(227, 152+(counter*75), 396, 73);
+        buttons[num].setDimensions(352, 192+(counter*75), 446, 73);
         buttons[num].display();
-        tweets[num].setDimensions(300, 156+(counter*75), 319, 48);
+        tweets[num].setDimensions(425, 196+(counter*75), 369, 48);
         tweets[num].display();
         num = (num+1)%buttons.length;
         counter++;
@@ -208,18 +231,32 @@ void draw()
     map.draw();
     cp6.show();
     cp7.hide();
-    
-    for (int i = 0; i < parentLoc.size(); i++)
-    {
-      markerParent.add(map.getScreenPosition(parentLoc.get(i)));
-      fill(200, 0, 0);
-      ellipse(markerParent.get(i).x, markerParent.get(i).y, 5, 5);
-    }
+   
     for (int i = 0; i < childLoc.size(); i++)
     {
-      markerChild.add(map.getScreenPosition(childLoc.get(i)));
-      fill(0, 200, 0);
-      ellipse(markerChild.get(i).x, markerChild.get(i).y, 5, 5);
+      //markerChild.add(map.getScreenPosition(childLoc.get(i)));
+      //fill(0, 100, 0, 150);
+      //ellipse(markerChild.get(i).x, markerChild.get(i).y, 10, 10);
+      
+      ScreenPosition child = map.getScreenPosition(childLoc.get(i));
+      fill(0, 100, 0, 150);
+      ellipse(child.x, child.y, 10, 10);
+    }
+    for (int i = 0; i < parentLoc.size(); i++)
+    {
+      //markerParent.add(map.getScreenPosition(parentLoc.get(i)));
+      //fill(255, 0, 0);
+      //ellipse(markerParent.get(i).x, markerParent.get(i).y, 10, 10);
+      
+      ScreenPosition parent = map.getScreenPosition(parentLoc.get(i));
+      fill(255, 0, 0);
+      ellipse(parent.x, parent.y, 10, 10);
+    }
+    for(int i = 0; i < hashtagLoc.size(); i++)
+    {
+      ScreenPosition hash = map.getScreenPosition(hashtagLoc.get(i));
+      fill(102, 51, 255, 180);
+      ellipse(hash.x, hash.y, 10, 10);
     }
   }
   else if (mode == 2)
@@ -235,30 +272,30 @@ void mousePressed()
 {
   if (mode == 0)
   {
-     if ((mouseX > 227 && mouseX < 623) && (mouseY > 152 && mouseY < 225))
+     if ((mouseX > 352 && mouseX < 798) && (mouseY > 192 && mouseY < 265))
     {
       buttons[selection].click();
     }
     //click box of thumbnail 2
-    else if ((mouseX > 227 && mouseX < 623) && (mouseY > 227 && mouseY < 300))
+    else if ((mouseX > 352 && mouseX < 798) && (mouseY > 267 && mouseY < 340))
     {
       int temp = (selection+1)%buttons.length;
       buttons[temp].click();
     } 
     //click box of thumbnail 3
-    else if ((mouseX > 227 && mouseX < 623) && (mouseY > 302 && mouseY < 375))
+    else if ((mouseX > 352 && mouseX < 798) && (mouseY > 342 && mouseY < 415))
     {
       int temp = (selection+2)%buttons.length;
       buttons[temp].click();
     } 
     //click box of thumbnail 4
-    else if ((mouseX > 227 && mouseX < 623) && (mouseY > 377 && mouseY < 450))
+    else if ((mouseX > 352 && mouseX < 798) && (mouseY > 417 && mouseY < 490))
     {
       int temp = (selection+3)%buttons.length;
       buttons[temp].click();
     } 
     //click box of thumbnail 5
-    else if ((mouseX > 227 && mouseX < 623) && (mouseY > 452 && mouseY < 525))
+    else if ((mouseX > 352 && mouseX < 798) && (mouseY > 492 && mouseY < 565))
     {
       int temp = (selection+4)%buttons.length;
       buttons[temp].click();
@@ -268,7 +305,7 @@ void mousePressed()
 
 void controlEvent(ControlEvent theEvent)
 {
-  if(userSearch == true && hashtagSearch == false)
+  if(userSearch == true && hashtagSearch == false && mapLoaded == false)
   {
     if(theEvent.isAssignableFrom(Textfield.class))
     {
@@ -277,12 +314,20 @@ void controlEvent(ControlEvent theEvent)
       
     }
   } 
-  else if (userSearch == false && hashtagSearch == true)
+  else if (userSearch == false && hashtagSearch == true && mapLoaded == false)
   {
     if(theEvent.isAssignableFrom(Textfield.class))
     {
       hashtag = theEvent.getStringValue();
       displayHashtag(hashtag);
+    }
+  }
+  else if (mapLoaded == true)
+  {
+    if(theEvent.isAssignableFrom(Textfield.class))
+    {
+      hashtagMap = theEvent.getStringValue();
+      addHashtag(hashtagMap);
     }
   }
 }
@@ -332,6 +377,9 @@ void displayUser(String user)
       tweets[i].setTweetId(status.getId());
       tweets[i].setUserLoc(status.getUser().getLocation());
       
+      Date dtemp = status.getCreatedAt();
+      tweets[i].setDate(dtemp.getDate(), dtemp.getMonth()+1, dtemp.getYear()+1900);
+      
       println("Tweet " + i + ": " + status.getText() + "\t ID: " + status.getId());
       
       
@@ -344,7 +392,7 @@ void displayUser(String user)
       }
       else
       {
-        userParentLocation(i, tweets[i].getUserLoc());
+        //userParentLocation(i, tweets[i].getUserLoc());
         //println(status.getUser().getLocation());
         //println(i + " from main: " + tweets[i].getLat() + " " + tweets[i].getLon() + "\n");
         //tweets[i].setCoordStatus(false);
@@ -383,6 +431,9 @@ void displayHashtag(String hashtag)
       tweets[i].setTweetId(status.getId());
       tweets[i].setUserLoc(status.getUser().getLocation());
       
+      Date dtemp = status.getCreatedAt();
+      tweets[i].setDate(dtemp.getDate(), dtemp.getMonth()+1, dtemp.getYear()+1900);
+      
       if (status.getGeoLocation() != null)
       {
         tweets[i].setCoordStatus(true);
@@ -391,7 +442,7 @@ void displayHashtag(String hashtag)
       }
       else
       {
-        userParentLocation(i, tweets[i].getUserLoc());
+        //userParentLocation(i, tweets[i].getUserLoc());
         //println(tweets[i].getUserLoc());
         //println(status.getUser().getLocation());
         //println(i + " from main: " + tweets[i].getLat() + " " + tweets[i].getLon() + "\n");

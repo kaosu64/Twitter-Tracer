@@ -22,3 +22,22 @@ void userParentLocation(int num, String searchName)
   }
 }
 
+void userTagLocation(int num, String searchName)
+{
+  searchCriteria.setQ(searchName);
+  
+  try
+  {
+    ToponymSearchResult searchResult = WebService.search(searchCriteria);
+    
+    List<Toponym> toponym = searchResult.getToponyms();
+    
+    hashtagLoc.add(new de.fhpotsdam.unfolding.geo.Location(
+      toponym.get(0).getLatitude(), 
+      toponym.get(0).getLongitude()));
+  }
+  catch (Exception e) 
+  {
+    println(num + " unable");
+  }
+}
