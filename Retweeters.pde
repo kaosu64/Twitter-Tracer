@@ -67,6 +67,8 @@ class Retweeters
 
 void setRetweeters(int num)
 {
+  //WebService.setUserName("mindbeef");
+  
   try
   {
     Retweeters tempRetweeter = new Retweeters();
@@ -75,6 +77,8 @@ void setRetweeters(int num)
     for(int i = 0; i < tempTweet.size(); i++)
     {
       Status tempStatus = (Status)tempTweet.get(i);
+      println(tempStatus.getUser().getLocation());
+      
       
       if (tempStatus.getGeoLocation() != null)
       {
@@ -89,12 +93,12 @@ void setRetweeters(int num)
           ToponymSearchResult searchResult = WebService.search(searchCriteria);
           
           List<Toponym> toponym = searchResult.getToponyms();
-          toponym.clear();
+          //toponym.clear();
           
           tempRetweeter.setCoords(toponym.get(0).getLatitude(), toponym.get(0).getLongitude());
           tempRetweeter.setLocStatus(true);
           
-          //println(toponym.get(0).getName());
+          println(toponym.get(0).getName());
           println(num + " from method : " + toponym.get(0).getLatitude() + " " + toponym.get(0).getLongitude());
   
         }
