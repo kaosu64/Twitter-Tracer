@@ -137,7 +137,11 @@ void setup()
       tweets[i].setUserLoc(status.getUser().getLocation());
       
       Date dtemp = status.getCreatedAt();
+<<<<<<< HEAD
       tweets[i].setDate(dtemp.getDate(), dtemp.getMonth()+1, dtemp.getYear()+1900);
+=======
+      tweets[i].setDate(dtemp.getDay(), dtemp.getMonth(), dtemp.getYear()+1900);
+>>>>>>> ebcce9a6612e6baaee37e6dbc0be4f6d8a3996c6
       
      // List<Status> test = twitter.getRetweets(tweets[i].getTweetId());
       //println(status.getUser().getLocation());
@@ -255,7 +259,11 @@ void draw()
     for(int i = 0; i < hashtagLoc.size(); i++)
     {
       ScreenPosition hash = map.getScreenPosition(hashtagLoc.get(i));
+<<<<<<< HEAD
       fill(102, 51, 255, 180);
+=======
+      fill(238, 137, 40, 150);
+>>>>>>> ebcce9a6612e6baaee37e6dbc0be4f6d8a3996c6
       ellipse(hash.x, hash.y, 10, 10);
     }
   }
@@ -378,7 +386,11 @@ void displayUser(String user)
       tweets[i].setUserLoc(status.getUser().getLocation());
       
       Date dtemp = status.getCreatedAt();
+<<<<<<< HEAD
       tweets[i].setDate(dtemp.getDate(), dtemp.getMonth()+1, dtemp.getYear()+1900);
+=======
+      tweets[i].setDate(dtemp.getDay(), dtemp.getMonth(), dtemp.getYear()+1900);
+>>>>>>> ebcce9a6612e6baaee37e6dbc0be4f6d8a3996c6
       
       println("Tweet " + i + ": " + status.getText() + "\t ID: " + status.getId());
       
@@ -432,7 +444,11 @@ void displayHashtag(String hashtag)
       tweets[i].setUserLoc(status.getUser().getLocation());
       
       Date dtemp = status.getCreatedAt();
+<<<<<<< HEAD
       tweets[i].setDate(dtemp.getDate(), dtemp.getMonth()+1, dtemp.getYear()+1900);
+=======
+      tweets[i].setDate(dtemp.getDay(), dtemp.getMonth(), dtemp.getYear()+1900);
+>>>>>>> ebcce9a6612e6baaee37e6dbc0be4f6d8a3996c6
       
       if (status.getGeoLocation() != null)
       {
