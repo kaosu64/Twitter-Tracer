@@ -181,6 +181,10 @@ public void displaymap()
   markerChild.clear();
   retweeters.clear();
   lineMarkers.clear();
+<<<<<<< HEAD
+  map.getDefaultMarkerManager().clearMarkers();
+=======
+>>>>>>> ebcce9a6612e6baaee37e6dbc0be4f6d8a3996c6
   
   boolean hasLocations = false;
   
