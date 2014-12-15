@@ -89,6 +89,8 @@ Date dateSince = new Date();
 Date dateUntil = new Date();
 
 PImage logo;
+PFont twitterFont;
+
 int mode = 0, selection = 0;
 boolean userSearch = true, hashtagSearch = false;
 boolean mapLoaded = false, timelineLoaded = false;
@@ -111,6 +113,7 @@ void setup()
   //cb.setOAuthConsumerSecret("xxxx");
   //cb.setOAuthAccessToken("xxxx");
   //cb.setOAuthAccessTokenSecret("xxxx");
+ 
  
   twitter = new TwitterFactory(cb.build()).getInstance();
   
