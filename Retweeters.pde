@@ -116,10 +116,6 @@ void setRetweeters(int num)
       {
         childLoc.add(new de.fhpotsdam.unfolding.geo.Location(retweeters.get(i).getLat(),
                                                         retweeters.get(i).getLon()));
-                                                        
-        SimpleLinesMarker slm = new SimpleLinesMarker(parentLoc.get(parentLoc.size()-1), childLoc.get(childLoc.size()-1));
-        slm.setStrokeWeight(1);
-        lineMarkers.add(slm);
       }
     }
   }
