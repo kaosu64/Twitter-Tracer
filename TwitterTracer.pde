@@ -118,12 +118,8 @@ void setup()
   //cb.setOAuthConsumerSecret("xxxx");
   //cb.setOAuthAccessToken("xxxx");
   //cb.setOAuthAccessTokenSecret("xxxx");
-<<<<<<< HEAD
   
-=======
- 
- 
->>>>>>> parent of c9cb581... Revert "more fixes"
+  
   twitter = new TwitterFactory(cb.build()).getInstance();
   
   page = new Paging (1,20);
