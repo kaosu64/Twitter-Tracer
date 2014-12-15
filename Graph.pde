@@ -11,8 +11,6 @@ class Graph
   private color clAxis;
   private color clLine;
   private FloatList points;
-  private StringList xLabels;
-  private boolean bMonth;
   
   Graph()
   {
@@ -24,8 +22,6 @@ class Graph
     clAxis = color(255,255,255);
     clLine = color(255,255,255);
     points = new FloatList();
-    xLabels = null;
-    bMonth = true;
   }
   
   Graph(float nx, float ny, float nw, float nh)
@@ -38,8 +34,6 @@ class Graph
     clAxis = color(255,255,255);
     clLine = color(0,255,255);
     points = new FloatList();
-    xLabels = null;
-    bMonth = true;
   }
   
   void setXPos(float n)
@@ -92,21 +86,6 @@ class Graph
     return points.remove(i);
   }
   
-  void setLabels(StringList l)
-  {
-    xLabels = l;
-  }
-  
-  void monthsMode()
-  {
-    bMonth = true;
-  }
-  
-  void daysMode()
-  {
-    bMonth = false;
-  }
-  
   void drawGraph()
   {
     drawBase();
@@ -157,31 +136,18 @@ class Graph
   {
     fill(clAxis);
     textAlign(CENTER);
-    textFont(fontGraph);
-    textSize(14);
+    textFont(fontGraph, 14);
     
     // X-axis labels
-    if (bMonth)
-    {
-      text("Month:",x-50,y+h+30);
-    }
-    else
-    {
-      text("Day:",x-40,y+h+30);
-      textSize(12);
-    }
+    text("Month",x+20,y+h+40);
     float xdiff = w / (points.size()-1),
           inc = 0;
     for (int i=0; i<points.size(); i++)
     {
-      if (xLabels == null || xLabels.get(i) == null)
-        text(i+1,x+inc,y+h+20);
-      else
-        text(xLabels.get(i),x+inc,y+h+20);
+      text(i+1,x+inc,y+h+20);
       inc+=xdiff;
     }
     
-    textSize(14);
     // Y-axis labels
     text("Retweets",x-40,y);
     float ydiff = h / 100;

@@ -72,14 +72,11 @@ UnfoldingMap map;
 ControlP5 cp5, cp6, cp7;
 Textfield twitterTextField, hashtagMapTextField;
 Textlabel myTextlabelA, myTextlabelB, myTextlabelC;
-PFont fontTweets, fontTextfieldLabel, fontButton, fontGraph, fontSlider;
+PFont fontTweets, fontTextfieldLabel, fontButton, fontGraph;
 
 Button[] buttons;
 TweetDisplay[] tweets;
 Graph graph;
-float[][] rtwDates = new float[12][32];
-FloatList rtwMonths = new FloatList();
-StringList rtwMonthsLabel = new StringList();
 
 List<Status> statuses = null;
 Twitter twitter;
@@ -87,13 +84,13 @@ Query query;
 Paging page;
 
 int sinceYear, sinceMonth, sinceDay,
-    untilYear, untilMonth, untilDay,
-    tlYear, tlMonth, tlDay;
+    untilYear, untilMonth, untilDay;
 Date dateSince = new Date();
 Date dateUntil = new Date();
-Date currentDate = new Date();
 
 PImage logo;
+PFont twitterFont;
+
 int mode = 0, selection = 0;
 boolean userSearch = true, hashtagSearch = false;
 boolean mapLoaded = false, timelineLoaded = false;
@@ -116,6 +113,7 @@ void setup()
   //cb.setOAuthConsumerSecret("xxxx");
   //cb.setOAuthAccessToken("xxxx");
   //cb.setOAuthAccessTokenSecret("xxxx");
+ 
  
   twitter = new TwitterFactory(cb.build()).getInstance();
   
@@ -193,24 +191,15 @@ void setup()
     println("Error: "+e+"\n");
   }
   
+  // Sets the size of the graph in the timeline
+  graph = new Graph(120,100,width-200,height-250);
+  
   map = new UnfoldingMap(this, 10, 60, width-20, height-70, new StamenMapProvider.WaterColor());
   //map = new UnfoldingMap(this, new StamenMapProvider.WaterColor());
   map.setTweening(true);
   MapUtils.createDefaultEventDispatcher(this, map);
   map.zoomAndPanTo(new de.fhpotsdam.unfolding.geo.Location(0.0,0.0), 2);
   //map.setScaleRange(1400.0, 1000.0);
-  
-  // Sets the size of the graph in the timeline
-  graph = new Graph(120,100,width-200,height-250);
-  
-  // Initializes array of dates
-  for (int i=0; i<12; i++)
-  {
-    for (int j=0; j<31; j++)
-    {
-      rtwDates[i][j]=0.;
-    }
-  }
   
   cp5 = new ControlP5(this);
   cp6 = new ControlP5(this);
@@ -221,7 +210,6 @@ void setup()
   fontTextfieldLabel = loadFont("LucidaSans-12.vlw");
   fontButton = loadFont("LucidaSans-Demi-14.vlw");
   fontGraph = loadFont("LucidaSans-Demi-14.vlw");
-  fontSlider = loadFont("LucidaSans-11.vlw");
   
   displayUI();
   displayMapUI();

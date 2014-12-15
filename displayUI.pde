@@ -46,33 +46,33 @@ void displayUI()
      .setPosition(10,10)
      .setSize(100,20)
      .setRange(2006,2026)
-     .setValue(currentDate.getYear()+1900-1)
+     .setValue(2014)
      .setNumberOfTickMarks(21)
      .moveTo(g1);
-  cp5.get(Slider.class, "sinceYear").getCaptionLabel().setFont(fontSlider);
-  cp5.get(Slider.class, "sinceYear").getValueLabel().setFont(fontSlider);
+  cp5.get(Slider.class, "sinceYear").getCaptionLabel().setFont(fontTweets);
+  cp5.get(Slider.class, "sinceYear").getValueLabel().setFont(fontTweets);
   
   cp5.addSlider("sinceMonth")
      .setCaptionLabel("month")
      .setPosition(10,40)
      .setSize(100,20)
      .setRange(1,12)
-     .setValue(currentDate.getMonth()+1)
+     .setValue(1)
      .setNumberOfTickMarks(12)
      .moveTo(g1);
-  cp5.get(Slider.class, "sinceMonth").getCaptionLabel().setFont(fontSlider);
-  cp5.get(Slider.class, "sinceMonth").getValueLabel().setFont(fontSlider);
+  cp5.get(Slider.class, "sinceMonth").getCaptionLabel().setFont(fontTweets);
+  cp5.get(Slider.class, "sinceMonth").getValueLabel().setFont(fontTweets);
   
   cp5.addSlider("sinceDay")
      .setCaptionLabel("day")
      .setPosition(10,70)
      .setSize(100,20)
      .setRange(1,31)
-     .setValue(currentDate.getDate())
+     .setValue(1)
      .setNumberOfTickMarks(31)
      .moveTo(g1);
-  cp5.get(Slider.class, "sinceDay").getCaptionLabel().setFont(fontSlider);
-  cp5.get(Slider.class, "sinceDay").getValueLabel().setFont(fontSlider);
+  cp5.get(Slider.class, "sinceDay").getCaptionLabel().setFont(fontTweets);
+  cp5.get(Slider.class, "sinceDay").getValueLabel().setFont(fontTweets);
   
   Group g2 = cp5.addGroup("untilGroup")
                 .setCaptionLabel("until date")
@@ -91,33 +91,33 @@ void displayUI()
      .setPosition(10,10)
      .setSize(100,20)
      .setRange(2006,2026)
-     .setValue(currentDate.getYear()+1900)
+     .setValue(2015)
      .setNumberOfTickMarks(21)
      .moveTo(g2);
-  cp5.get(Slider.class, "untilYear").getCaptionLabel().setFont(fontSlider);
-  cp5.get(Slider.class, "untilYear").getValueLabel().setFont(fontSlider);
+  cp5.get(Slider.class, "untilYear").getCaptionLabel().setFont(fontTweets);
+  cp5.get(Slider.class, "untilYear").getValueLabel().setFont(fontTweets);
   
   cp5.addSlider("untilMonth")
      .setCaptionLabel("month")
      .setPosition(10,40)
      .setSize(100,20)
      .setRange(1,12)
-     .setValue(currentDate.getMonth()+1)
+     .setValue(1)
      .setNumberOfTickMarks(12)
      .moveTo(g2);
-  cp5.get(Slider.class, "untilMonth").getCaptionLabel().setFont(fontSlider);
-  cp5.get(Slider.class, "untilMonth").getValueLabel().setFont(fontSlider);
+  cp5.get(Slider.class, "untilMonth").getCaptionLabel().setFont(fontTweets);
+  cp5.get(Slider.class, "untilMonth").getValueLabel().setFont(fontTweets);
   
   cp5.addSlider("untilDay")
      .setCaptionLabel("day")
      .setPosition(10,70)
      .setSize(100,20)
      .setRange(1,31)
-     .setValue(currentDate.getDate())
+     .setValue(1)
      .setNumberOfTickMarks(31)
      .moveTo(g2);
-  cp5.get(Slider.class, "untilDay").getCaptionLabel().setFont(fontSlider);
-  cp5.get(Slider.class, "untilDay").getValueLabel().setFont(fontSlider);
+  cp5.get(Slider.class, "untilDay").getCaptionLabel().setFont(fontTweets);
+  cp5.get(Slider.class, "untilDay").getValueLabel().setFont(fontTweets);
   // End date selection
   
   cp5.addBang("previous")
@@ -140,7 +140,7 @@ void displayUI()
      .setSize(195, 50)
      .getCaptionLabel().align(ControlP5.CENTER, ControlP5.CENTER)
                        .setFont(fontButton);
-  cp5.getTooltip().register("map","Display selected tweets on a map.");
+  cp5.getTooltip().register("displaymap","Display selected tweets on a map.");
  
   cp5.addBang("timeline")
      .setPosition(580, 580)
@@ -198,9 +198,7 @@ public void previous()
   selection = ((selection-5)%buttons.length+buttons.length)%buttons.length;
 }
 
-/*
- * Loads the map for the first time
- */
+
 public void displaymap()
 {
   parentLoc.clear();
@@ -221,9 +219,9 @@ public void displaymap()
       if(tweets[i].getCoordStatus() == true)
       {
         
-        setRetweeters(i);
-        
         parentLoc.add(new de.fhpotsdam.unfolding.geo.Location(tweets[i].getLat(), tweets[i].getLon()));
+  
+        setRetweeters(i);
   
         hasLocations = true;
       }
@@ -231,14 +229,13 @@ public void displaymap()
       {
         userParentLocation(i, tweets[i].getUserLoc());
         
-        setRetweeters(i);
-        
         parentLoc.add(new de.fhpotsdam.unfolding.geo.Location(tweets[i].getLat(), tweets[i].getLon()));
   
+        setRetweeters(i);
       }
     }
   }
-  
+  /*
   for(int i = 0; i < parentLoc.size(); i++)
   {
     for(int j = 0; j < childLoc.size(); j++)
@@ -247,7 +244,7 @@ public void displaymap()
       slm.setStrokeWeight(2);
       lineMarkers.add(slm);
     }
-  }
+  }*/
   
   map.addMarkers(lineMarkers);
   
@@ -261,11 +258,18 @@ public void displaymap()
   mode = 1;
 }
 
-/*
+/**
  * Loads the timeline for the first time
  */
 public void timeline()
 {
+  // Initiate float list
+  FloatList fl = new FloatList();
+  for (int i = 0; i < 12; i++)
+  {
+    fl.append(0);
+  }
+  
   // Get first selected tweet
   int n = 0;
   while (n < tweets.length && buttons[n].getHighlight() == false)
@@ -288,53 +292,14 @@ public void timeline()
       println("Error: "+e+"\n");
     }
     
-    // Initiate float list
-    FloatList fl = new FloatList();
-    for (int i = 0; i < 12; i++)
-    {
-      fl.append(0);
-    }
-    
-    // Add data to array of dates of retweets
+    // Add data to the float list
     ArrayList<Date> dList = new ArrayList<Date>();
-    Date dAfter = new Date();
-    dAfter.setYear(currentDate.getYear()-1);
     for (Status s : rtw)
     {
-      Date dCreated = s.getCreatedAt();
-      if (dCreated.after(dAfter))
-      {
-        fl.add(dCreated.getMonth(), 1);
-        rtwDates[dCreated.getMonth()][dCreated.getDate()] += 1.;
-      }
+      fl.add(s.getCreatedAt().getMonth(), 1);
     }
     
-    FloatList fl2 = new FloatList();
-    StringList sl = new StringList();
-    // Get last year
-    Calendar c = Calendar.getInstance();
-    c.add(Calendar.MONTH,-11);
-    // Add year with first displayed month
-    fl2.append(fl.get(c.get(Calendar.MONTH)));
-    sl.append((c.get(Calendar.MONTH)+1)+"\n"+c.get(Calendar.YEAR));
-    c.add(Calendar.MONTH,1);
-    // Add data to lists
-    while (c.before(Calendar.getInstance()))
-    {
-      fl2.append(fl.get(c.get(Calendar.MONTH)));
-      if (c.get(Calendar.MONTH) == 0)  // Add year if first month of year
-        sl.append((c.get(Calendar.MONTH)+1)+"\n"+c.get(Calendar.YEAR));
-      else
-        sl.append(""+(c.get(Calendar.MONTH)+1));
-      c.add(Calendar.MONTH,1);
-    }
-    
-    // Save results
-    rtwMonths = fl2;
-    rtwMonthsLabel = sl;
-    // Add to graph
-    graph.setPoints(fl2);
-    graph.setLabels(sl);
+    graph.setPoints(fl);
   }
   
   timelineLoaded = true;
