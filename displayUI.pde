@@ -314,7 +314,7 @@ public void timeline()
       {
         fl.add(dCreated.getMonth(), 1);
         rtwDates[dCreated.getMonth()][dCreated.getDate()] += 1.;
-        println(dCreated.getMonth()+"/"+dCreated.getDate()+": "+rtwDates[dCreated.getMonth()][dCreated.getDate()]);
+        //println(dCreated.getMonth()+"/"+dCreated.getDate()+": "+rtwDates[dCreated.getMonth()][dCreated.getDate()]);
       }
     }
     
