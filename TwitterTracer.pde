@@ -94,6 +94,8 @@ Date dateUntil = new Date();
 Date currentDate = new Date();
 
 PImage logo;
+PFont twitterFont;
+
 int mode = 0, selection = 0;
 boolean userSearch = true, hashtagSearch = false;
 boolean mapLoaded = false, timelineLoaded = false;
@@ -116,7 +118,12 @@ void setup()
   //cb.setOAuthConsumerSecret("xxxx");
   //cb.setOAuthAccessToken("xxxx");
   //cb.setOAuthAccessTokenSecret("xxxx");
+<<<<<<< HEAD
   
+=======
+ 
+ 
+>>>>>>> parent of c9cb581... Revert "more fixes"
   twitter = new TwitterFactory(cb.build()).getInstance();
   
   page = new Paging (1,20);

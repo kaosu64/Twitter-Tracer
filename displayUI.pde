@@ -140,7 +140,7 @@ void displayUI()
      .setSize(195, 50)
      .getCaptionLabel().align(ControlP5.CENTER, ControlP5.CENTER)
                        .setFont(fontButton);
-  cp5.getTooltip().register("map","Display selected tweets on a map.");
+  cp5.getTooltip().register("displaymap","Display selected tweets on a map.");
  
   cp5.addBang("timeline")
      .setPosition(580, 580)
@@ -221,9 +221,9 @@ public void displaymap()
       if(tweets[i].getCoordStatus() == true)
       {
         
-        setRetweeters(i);
-        
         parentLoc.add(new de.fhpotsdam.unfolding.geo.Location(tweets[i].getLat(), tweets[i].getLon()));
+  
+        setRetweeters(i);
   
         hasLocations = true;
       }
@@ -231,14 +231,13 @@ public void displaymap()
       {
         userParentLocation(i, tweets[i].getUserLoc());
         
-        setRetweeters(i);
-        
         parentLoc.add(new de.fhpotsdam.unfolding.geo.Location(tweets[i].getLat(), tweets[i].getLon()));
   
+        setRetweeters(i);
       }
     }
   }
-  
+  /*
   for(int i = 0; i < parentLoc.size(); i++)
   {
     for(int j = 0; j < childLoc.size(); j++)
@@ -247,7 +246,7 @@ public void displaymap()
       slm.setStrokeWeight(2);
       lineMarkers.add(slm);
     }
-  }
+  }*/
   
   map.addMarkers(lineMarkers);
   
