@@ -30,7 +30,7 @@ void displayMapUI()
      .setSize(200, 30)
      .getCaptionLabel().align(ControlP5.CENTER, ControlP5.CENTER)
                        .setFont(fontButton);
-  cp6.getTooltip().register("addHashtag","Display on map the locations of specific hashtags.");
+  cp6.getTooltip().register("inputHashtag","Display on map the locations of specific hashtags.");
   
   cp6.addBang("clear")
      .setCaptionLabel("reset hashtag list")
