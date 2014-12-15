@@ -121,6 +121,6 @@ void setRetweeters(int num)
   }
   catch(TwitterException e)
   {
-    println("Error\n");
+    println("Error: "+e+"\n");
   }
 }

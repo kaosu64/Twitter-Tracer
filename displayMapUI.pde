@@ -5,33 +5,39 @@ void displayMapUI()
      .setSize(250, 30)
      .setFont(createFont("arial", 25))
      .setColorBackground(color(0, 100));
+  hashtagMapTextField.getCaptionLabel()
+                     .setFont(fontTextfieldLabel);
   
   cp6.addBang("main_menu")
      .setCaptionLabel("main menu")
      .setPosition(10, 10)
      .setSize(200, 30)
-     .getCaptionLabel().align(ControlP5.CENTER, ControlP5.CENTER);
+     .getCaptionLabel().align(ControlP5.CENTER, ControlP5.CENTER)
+                       .setFont(fontButton);
   cp6.getTooltip().register("main_menu","Return to the main menu.");
 
   cp6.addBang("display_timeline")
      .setCaptionLabel("display timeline")
      .setPosition(220, 10)
      .setSize(200, 30)
-     .getCaptionLabel().align(ControlP5.CENTER, ControlP5.CENTER);
+     .getCaptionLabel().align(ControlP5.CENTER, ControlP5.CENTER)
+                       .setFont(fontButton);
   cp6.getTooltip().register("display_timeline","Display tweets in a timeline.");
   
   cp6.addBang("inputHashtag")
      .setCaptionLabel("input hashtag")
      .setPosition(730, 10)
      .setSize(200, 30)
-     .getCaptionLabel().align(ControlP5.CENTER, ControlP5.CENTER);
+     .getCaptionLabel().align(ControlP5.CENTER, ControlP5.CENTER)
+                       .setFont(fontButton);
   cp6.getTooltip().register("addHashtag","Display on map the locations of specific hashtags.");
   
   cp6.addBang("clear")
      .setCaptionLabel("reset hashtag list")
      .setPosition(940, 10)
      .setSize(200, 30)
-     .getCaptionLabel().align(ControlP5.CENTER, ControlP5.CENTER);
+     .getCaptionLabel().align(ControlP5.CENTER, ControlP5.CENTER)
+                       .setFont(fontButton);
   cp6.getTooltip().register("clear","Clear the list of hashtags.");
   
 }

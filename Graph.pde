@@ -127,7 +127,7 @@ class Graph
     {
       fill(clLine);
       textAlign(CENTER);
-      textSize(16);
+      textFont(fontGraph, 16);
       text("No retweets found.",x+w/2,y+h/2);
     }
   }
@@ -136,7 +136,7 @@ class Graph
   {
     fill(clAxis);
     textAlign(CENTER);
-    textSize(14);
+    textFont(fontGraph, 14);
     
     // X-axis labels
     text("Month",x+20,y+h+40);

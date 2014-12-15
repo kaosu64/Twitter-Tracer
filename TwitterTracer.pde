@@ -72,6 +72,7 @@ UnfoldingMap map;
 ControlP5 cp5, cp6, cp7;
 Textfield twitterTextField, hashtagMapTextField;
 Textlabel myTextlabelA, myTextlabelB, myTextlabelC;
+PFont fontTweets, fontTextfieldLabel, fontButton, fontGraph;
 
 Button[] buttons;
 TweetDisplay[] tweets;
@@ -184,12 +185,13 @@ void setup()
   }
   catch(TwitterException e)
   {
-    println("Error\n");
+    println("Error: "+e+"\n");
   }
   
-  graph = new Graph(100,100,650,350);
+  // Sets the size of the graph in the timeline
+  graph = new Graph(120,100,width-200,height-250);
   
-  map = new UnfoldingMap(this, 10, 50, width-20, height-60, new StamenMapProvider.WaterColor());
+  map = new UnfoldingMap(this, 10, 60, width-20, height-70, new StamenMapProvider.WaterColor());
   //map = new UnfoldingMap(this, new StamenMapProvider.WaterColor());
   map.setTweening(true);
   MapUtils.createDefaultEventDispatcher(this, map);
@@ -199,6 +201,12 @@ void setup()
   cp5 = new ControlP5(this);
   cp6 = new ControlP5(this);
   cp7 = new ControlP5(this);
+  
+  // Set fonts for UI
+  fontTweets = loadFont("LucidaSans-11.vlw");
+  fontTextfieldLabel = loadFont("LucidaSans-12.vlw");
+  fontButton = loadFont("LucidaSans-Demi-14.vlw");
+  fontGraph = loadFont("LucidaSans-Demi-14.vlw");
   
   displayUI();
   displayMapUI();
@@ -451,7 +459,7 @@ void displayUser(String user)
   }
   catch(TwitterException e)
   {
-    println("Error\n");
+    println("Error: "+e+"\n");
   }
 }
 
@@ -526,7 +534,7 @@ void displayHashtag(String hashtag)
   }
   catch(TwitterException e)
   {
-    println("Error\n");
+    println("Error: "+e+"\n");
   }
 }
 
