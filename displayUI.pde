@@ -11,31 +11,35 @@ void displayUI()
      .setFont(createFont("arial", 25))
      .setColorBackground(color(0, 100));
      //.setColorForeground(color(255, 100));
+  twitterTextField.getCaptionLabel()
+                  .setFont(fontTextfieldLabel);
   
   cp5.addBang("user")
      .setPosition(680, 50)
      .setSize(100, 30)
-     .getCaptionLabel().align(ControlP5.CENTER, ControlP5.CENTER);
+     .getCaptionLabel().align(ControlP5.CENTER, ControlP5.CENTER)
+                       .setFont(fontButton);
   cp5.getTooltip().register("user","Enters the username to be searched.");
 
   cp5.addBang("hashtag")
      .setPosition(785, 50)
      .setSize(100, 30)
-     .getCaptionLabel().align(ControlP5.CENTER, ControlP5.CENTER);
+     .getCaptionLabel().align(ControlP5.CENTER, ControlP5.CENTER)
+                       .setFont(fontButton);
   cp5.getTooltip().register("hashtag","Enters the hashtag to be searched.");
   
   // Date selection
   Group g1 = cp5.addGroup("sinceGroup")
                 .setCaptionLabel("since date")
-                .setPosition(430,140)
-                .setWidth(150)
+                .setPosition(430,150)
+                .setWidth(160)
                 .setBarHeight(30)
                 .setBackgroundColor(color(0, 200))
                 .setBackgroundHeight(110)
                 .close();
-                
   cp5.get(Group.class, "sinceGroup").getCaptionLabel()
-                                    .align(ControlP5.CENTER, ControlP5.CENTER);
+                                    .align(ControlP5.CENTER, ControlP5.CENTER)
+                                    .setFont(fontButton);
   
   cp5.addSlider("sinceYear")
      .setCaptionLabel("year")
@@ -45,7 +49,9 @@ void displayUI()
      .setValue(2014)
      .setNumberOfTickMarks(21)
      .moveTo(g1);
-     
+  cp5.get(Slider.class, "sinceYear").getCaptionLabel().setFont(fontTweets);
+  cp5.get(Slider.class, "sinceYear").getValueLabel().setFont(fontTweets);
+  
   cp5.addSlider("sinceMonth")
      .setCaptionLabel("month")
      .setPosition(10,40)
@@ -54,7 +60,9 @@ void displayUI()
      .setValue(1)
      .setNumberOfTickMarks(12)
      .moveTo(g1);
-     
+  cp5.get(Slider.class, "sinceMonth").getCaptionLabel().setFont(fontTweets);
+  cp5.get(Slider.class, "sinceMonth").getValueLabel().setFont(fontTweets);
+  
   cp5.addSlider("sinceDay")
      .setCaptionLabel("day")
      .setPosition(10,70)
@@ -63,19 +71,20 @@ void displayUI()
      .setValue(1)
      .setNumberOfTickMarks(31)
      .moveTo(g1);
-     
+  cp5.get(Slider.class, "sinceDay").getCaptionLabel().setFont(fontTweets);
+  cp5.get(Slider.class, "sinceDay").getValueLabel().setFont(fontTweets);
   
   Group g2 = cp5.addGroup("untilGroup")
                 .setCaptionLabel("until date")
-                .setPosition(610,140)
-                .setWidth(150)
+                .setPosition(620,150)
+                .setWidth(160)
                 .setBarHeight(30)
                 .setBackgroundColor(color(0, 200))
                 .setBackgroundHeight(110)
                 .close();
-                
   cp5.get(Group.class, "untilGroup").getCaptionLabel()
-                                    .align(ControlP5.CENTER, ControlP5.CENTER);
+                                    .align(ControlP5.CENTER, ControlP5.CENTER)
+                                    .setFont(fontButton);
   
   cp5.addSlider("untilYear")
      .setCaptionLabel("year")
@@ -85,7 +94,9 @@ void displayUI()
      .setValue(2015)
      .setNumberOfTickMarks(21)
      .moveTo(g2);
-     
+  cp5.get(Slider.class, "untilYear").getCaptionLabel().setFont(fontTweets);
+  cp5.get(Slider.class, "untilYear").getValueLabel().setFont(fontTweets);
+  
   cp5.addSlider("untilMonth")
      .setCaptionLabel("month")
      .setPosition(10,40)
@@ -94,7 +105,9 @@ void displayUI()
      .setValue(1)
      .setNumberOfTickMarks(12)
      .moveTo(g2);
-     
+  cp5.get(Slider.class, "untilMonth").getCaptionLabel().setFont(fontTweets);
+  cp5.get(Slider.class, "untilMonth").getValueLabel().setFont(fontTweets);
+  
   cp5.addSlider("untilDay")
      .setCaptionLabel("day")
      .setPosition(10,70)
@@ -103,30 +116,37 @@ void displayUI()
      .setValue(1)
      .setNumberOfTickMarks(31)
      .moveTo(g2);
+  cp5.get(Slider.class, "untilDay").getCaptionLabel().setFont(fontTweets);
+  cp5.get(Slider.class, "untilDay").getValueLabel().setFont(fontTweets);
   // End date selection
   
   cp5.addBang("previous")
-     .setPosition(250, 315)
+     .setPosition(250, 355)
      .setSize(75, 50)
-     .getCaptionLabel().align(ControlP5.CENTER, ControlP5.CENTER);
+     .getCaptionLabel().align(ControlP5.CENTER, ControlP5.CENTER)
+                       .setFont(fontButton);
   cp5.getTooltip().register("previous","Show the previous 5 tweets.");
   
   cp5.addBang("next")
-     .setPosition(825, 315)
+     .setPosition(825, 355)
      .setSize(75, 50)
-     .getCaptionLabel().align(ControlP5.CENTER, ControlP5.CENTER);
+     .getCaptionLabel().align(ControlP5.CENTER, ControlP5.CENTER)
+                       .setFont(fontButton);
   cp5.getTooltip().register("next","Show the next 5 tweets.");
   
   cp5.addBang("displaymap")
+     .setCaptionLabel("display map")
      .setPosition(377, 580)
      .setSize(195, 50)
-     .getCaptionLabel().align(ControlP5.CENTER, ControlP5.CENTER);
+     .getCaptionLabel().align(ControlP5.CENTER, ControlP5.CENTER)
+                       .setFont(fontButton);
   cp5.getTooltip().register("map","Display selected tweets on a map.");
  
   cp5.addBang("timeline")
      .setPosition(580, 580)
      .setSize(195, 50)
-     .getCaptionLabel().align(ControlP5.CENTER, ControlP5.CENTER);
+     .getCaptionLabel().align(ControlP5.CENTER, ControlP5.CENTER)
+                       .setFont(fontButton);
   cp5.getTooltip().register("timeline","Display selected tweets on a timeline.");
   
   cp5.addTextlabel("labelA")
@@ -137,15 +157,21 @@ void displayUI()
   
   cp5.addTextlabel("labelB")
      .setText("Select a time period: ")
-     .setPosition(200,100)
+     .setPosition(200,120)
      .setColorValue(#ffffff)
      .setFont(createFont("sans-serif",20));
      
   cp5.addTextlabel("labelC")
      .setText("Select a tweet: ")
-     .setPosition(200,150)
+     .setPosition(200,190)
      .setColorValue(#ffffff)
      .setFont(createFont("sans-serif",20));
+     
+  cp5.addTextlabel("labelD")
+     .setText("(only applies to User search)")
+     .setPosition(200,145)
+     .setColorValue(#ffffff)
+     .setFont(createFont("sans-serif",14));
 }
 
 public void user()
@@ -233,6 +259,9 @@ public void displaymap()
   mode = 1;
 }
 
+/**
+ * Loads the timeline for the first time
+ */
 public void timeline()
 {
   // Initiate float list
