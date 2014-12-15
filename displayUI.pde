@@ -294,6 +294,15 @@ public void timeline()
       fl.append(0);
     }
     
+    // Resets array of dates
+    for (int i=0; i<12; i++)
+    {
+      for (int j=0; j<31; j++)
+      {
+        rtwDates[i][j]=0.;
+      }
+    }
+    
     // Add data to array of dates of retweets
     ArrayList<Date> dList = new ArrayList<Date>();
     Date dAfter = new Date();
@@ -305,27 +314,30 @@ public void timeline()
       {
         fl.add(dCreated.getMonth(), 1);
         rtwDates[dCreated.getMonth()][dCreated.getDate()] += 1.;
+        println(dCreated.getMonth()+"/"+dCreated.getDate()+": "+rtwDates[dCreated.getMonth()][dCreated.getDate()]);
       }
     }
     
     FloatList fl2 = new FloatList();
     StringList sl = new StringList();
     // Get last year
-    Calendar c = Calendar.getInstance();
-    c.add(Calendar.MONTH,-11);
-    // Add year with first displayed month
-    fl2.append(fl.get(c.get(Calendar.MONTH)));
-    sl.append((c.get(Calendar.MONTH)+1)+"\n"+c.get(Calendar.YEAR));
+    Calendar c = Calendar.getInstance(),  // search paramter
+             cn = Calendar.getInstance();  // counter
     c.add(Calendar.MONTH,1);
+    cn.add(Calendar.MONTH,-11);
+    // Add year with first displayed month
+    fl2.append(fl.get(cn.get(Calendar.MONTH)));
+    sl.append((cn.get(Calendar.MONTH)+1)+"\n"+cn.get(Calendar.YEAR));
+    cn.add(Calendar.MONTH,1);
     // Add data to lists
-    while (c.before(Calendar.getInstance()))
+    while (cn.before(c))
     {
-      fl2.append(fl.get(c.get(Calendar.MONTH)));
-      if (c.get(Calendar.MONTH) == 0)  // Add year if first month of year
-        sl.append((c.get(Calendar.MONTH)+1)+"\n"+c.get(Calendar.YEAR));
+      fl2.append(fl.get(cn.get(Calendar.MONTH)));
+      if (cn.get(Calendar.MONTH) == 0)  // Add year if first month of year
+        sl.append((cn.get(Calendar.MONTH)+1)+"\n"+cn.get(Calendar.YEAR));
       else
-        sl.append(""+(c.get(Calendar.MONTH)+1));
-      c.add(Calendar.MONTH,1);
+        sl.append(""+(cn.get(Calendar.MONTH)+1));
+      cn.add(Calendar.MONTH,1);
     }
     
     // Save results
