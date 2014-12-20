@@ -1,5 +1,13 @@
+/**********************************************************
+| The retweeter class stores all the data of twitter users
+| who have retweeted a specific tweet. It stores their
+| location by coordinates and the coordinates of the user
+| it's been retweeted from.
+***********************************************************/
+
 class Retweeters
 {
+  //coordinate variables and parent coordinate variables
   private double latitude;
   private double longitude;
   private double parentLat;
@@ -7,6 +15,7 @@ class Retweeters
   private String username;
   private boolean hasLoc;
   
+  //default constructor
   Retweeters()
   {
     this.latitude = 0.0;
@@ -17,114 +26,59 @@ class Retweeters
     this.hasLoc = false;
   }
   
+  //sets the coordinates of the retweeter
   void setCoords(double lat, double lon)
   {
     this.latitude = lat;
     this.longitude = lon;
   }
   
+  //sets the coordinates of where it's been retweeted from
   void setParentCoords(double lat, double lon)
   {
     this.parentLat = lat;
     this.parentLon = lon;
   }
   
+  //sets the username of the retweeter
   void setUsername(String user)
   {
     this.username = user;
   }
   
+  //sets the status of whether the retweeter has a location
   void setLocStatus(boolean locStatus)
   {
     this.hasLoc = locStatus;
   }
   
+  //returns the latitude
   double getLat()
   {
     return this.latitude;
   }
   
+  //returns the longitude
   double getLon()
   {
     return this.longitude;
   }
   
+  //returns parent latitude
   double getParentLat()
   {
     return this.parentLat;
   }
   
+  //returns parent longitude
   double getParentLon()
   {
     return this.parentLon;
   }
   
+  //returns location status
   boolean getLocStatus()
   {
     return this.hasLoc;
-  }
-}
-
-void setRetweeters(int num)
-{
-  //WebService.setUserName("mindbeef");
-  
-  try
-  {
-    Retweeters tempRetweeter = new Retweeters();
-    List<Status> tempTweet = twitter.getRetweets(tweets[num].getTweetId());
-    
-    for(int i = 0; i < tempTweet.size(); i++)
-    {
-      Status tempStatus = (Status)tempTweet.get(i);
-      println(tempStatus.getUser().getLocation());
-      
-      
-      if (tempStatus.getGeoLocation() != null)
-      {
-        tempRetweeter.setCoords(tempStatus.getGeoLocation().getLatitude(), tempStatus.getGeoLocation().getLongitude());
-      }
-      else
-      {
-        searchCriteria.setQ(tempStatus.getUser().getLocation());
-        
-        try
-        {
-          ToponymSearchResult searchResult = WebService.search(searchCriteria);
-          
-          List<Toponym> toponym = searchResult.getToponyms();
-          //toponym.clear();
-          
-          tempRetweeter.setCoords(toponym.get(0).getLatitude(), toponym.get(0).getLongitude());
-          tempRetweeter.setLocStatus(true);
-          
-          println(toponym.get(0).getName());
-          println(num + " from method : " + toponym.get(0).getLatitude() + " " + toponym.get(0).getLongitude());
-  
-        }
-        catch(Exception e)
-        {
-          tempRetweeter.setCoords(0.0, 0.0);
-          tempRetweeter.setLocStatus(false);
-        }
-      }
-      
-      println(tempRetweeter.getLat() + " " + tempRetweeter.getLon());
-      tempRetweeter.setParentCoords(tweets[num].getLat(), tweets[num].getLon());
-      retweeters.add(tempRetweeter);
-      if (retweeters.get(i).getLocStatus() == true)
-      {
-        childLoc.add(new de.fhpotsdam.unfolding.geo.Location(retweeters.get(i).getLat(),
-                                                        retweeters.get(i).getLon()));
-                                                        
-        SimpleLinesMarker slm = new SimpleLinesMarker(parentLoc.get(parentLoc.size()-1), childLoc.get(childLoc.size()-1));
-        slm.setStrokeWeight(1);
-        lineMarkers.add(slm);
-      }
-    }
-  }
-  catch(TwitterException e)
-  {
-    println("Error: "+e+"\n");
   }
 }

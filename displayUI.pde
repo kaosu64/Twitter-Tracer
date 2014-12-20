@@ -1,10 +1,14 @@
-/***************************************
-| All buttons in mode 0 and its functions
-| are created here.
-***************************************/
+/**********************************************************
+| This file setsup all the UI functions in the main display
+| mode. It allows the user to search for tweets based on
+| Twitter usernames as well as by hashtag. It'll also allow
+| the user to jump to map display mode or to timeline mode.
+***********************************************************/
 
 void displayUI()
 {
+  
+  //textfeld to take username or hashtag
   twitterTextField = cp5.addTextfield("input")
      .setPosition(500, 50)
      .setSize(175, 30)
@@ -14,6 +18,7 @@ void displayUI()
   twitterTextField.getCaptionLabel()
                   .setFont(fontTextfieldLabel);
   
+  //button to search by user
   cp5.addBang("user")
      .setPosition(680, 50)
      .setSize(100, 30)
@@ -21,6 +26,7 @@ void displayUI()
                        .setFont(fontButton);
   cp5.getTooltip().register("user","Enters the username to be searched.");
 
+  //button to search by hashtag
   cp5.addBang("hashtag")
      .setPosition(785, 50)
      .setSize(100, 30)
@@ -120,6 +126,7 @@ void displayUI()
   cp5.get(Slider.class, "untilDay").getValueLabel().setFont(fontSlider);
   // End date selection
   
+  //previous button, displays the last 5 tweets
   cp5.addBang("previous")
      .setPosition(250, 355)
      .setSize(75, 50)
@@ -127,6 +134,7 @@ void displayUI()
                        .setFont(fontButton);
   cp5.getTooltip().register("previous","Show the previous 5 tweets.");
   
+  //next button, displays the next 5 tweets
   cp5.addBang("next")
      .setPosition(825, 355)
      .setSize(75, 50)
@@ -134,6 +142,7 @@ void displayUI()
                        .setFont(fontButton);
   cp5.getTooltip().register("next","Show the next 5 tweets.");
   
+  //map display button
   cp5.addBang("displaymap")
      .setCaptionLabel("display map")
      .setPosition(377, 580)
@@ -142,6 +151,7 @@ void displayUI()
                        .setFont(fontButton);
   cp5.getTooltip().register("displaymap","Display selected tweets on a map.");
  
+  //timeline display button
   cp5.addBang("timeline")
      .setPosition(580, 580)
      .setSize(195, 50)
@@ -149,24 +159,28 @@ void displayUI()
                        .setFont(fontButton);
   cp5.getTooltip().register("timeline","Display selected tweets on a timeline.");
   
+  //text label
   cp5.addTextlabel("labelA")
      .setText("Enter a username or hashtag: ")
      .setPosition(200,50)
      .setColorValue(#ffffff)
      .setFont(createFont("sans-serif",20));
   
+  //text label
   cp5.addTextlabel("labelB")
      .setText("Select a time period: ")
      .setPosition(200,120)
      .setColorValue(#ffffff)
      .setFont(createFont("sans-serif",20));
-     
+  
+  //text label
   cp5.addTextlabel("labelC")
      .setText("Select a tweet: ")
      .setPosition(200,190)
      .setColorValue(#ffffff)
      .setFont(createFont("sans-serif",20));
-     
+  
+  //text label
   cp5.addTextlabel("labelD")
      .setText("(only applies to User search)")
      .setPosition(200,145)
@@ -174,6 +188,7 @@ void displayUI()
      .setFont(createFont("sans-serif",14));
 }
 
+//submits the string from text field to search for a user
 public void user()
 {
   userSearch = true;
@@ -181,6 +196,7 @@ public void user()
   twitterTextField.submit();
 }
 
+//submits the string from text field to search for hashtags
 public void hashtag()
 {
   userSearch = false;
@@ -188,11 +204,13 @@ public void hashtag()
   twitterTextField.submit();
 }
 
+//displays the next 5 tweets
 public void next()
 {
   selection = (selection+5)%buttons.length;
 }
 
+//displays the previous 5 tweets
 public void previous()
 {
   selection = ((selection-5)%buttons.length+buttons.length)%buttons.length;
@@ -203,6 +221,7 @@ public void previous()
  */
 public void displaymap()
 {
+  //clear all the previous data
   parentLoc.clear();
   childLoc.clear();
   markerParent.clear();
@@ -211,50 +230,40 @@ public void displaymap()
   lineMarkers.clear();
   map.getDefaultMarkerManager().clearMarkers();
   
-  boolean hasLocations = false;
-  
+  //checks to see which tweets are highlighted, then displays them on the map
   for(int i = 0; i < tweets.length; i++)
   {
     if(buttons[i].getHighlight() == true)
     {
       
+      //checks if user has a defined location
       if(tweets[i].getCoordStatus() == true)
       {
         
+        //adds the location of the tweet
         parentLoc.add(new de.fhpotsdam.unfolding.geo.Location(tweets[i].getLat(), tweets[i].getLon()));
+        
+        //adds the location of the retweeter
+        userRetweetLocation(i);
   
-        setRetweeters(i);
-  
-        hasLocations = true;
       }
       else if (tweets[i].getCoordStatus() == false)
       {
-        userParentLocation(i, tweets[i].getUserLoc());
         
+        //grabs location and stores it into tweetdata
+        userTweetLocation(i, tweets[i].getUserLoc());
+        
+        //adds the location of the tweet
         parentLoc.add(new de.fhpotsdam.unfolding.geo.Location(tweets[i].getLat(), tweets[i].getLon()));
   
-        setRetweeters(i);
+        //adds the location of the retweeter
+        userRetweetLocation(i);
       }
     }
   }
-  /*
-  for(int i = 0; i < parentLoc.size(); i++)
-  {
-    for(int j = 0; j < childLoc.size(); j++)
-    {
-      SimpleLinesMarker slm = new SimpleLinesMarker(parentLoc.get(i), childLoc.get(j));
-      slm.setStrokeWeight(2);
-      lineMarkers.add(slm);
-    }
-  }*/
   
+  //draws a line from the original tweet to all the retweeters
   map.addMarkers(lineMarkers);
-  
-  if(hasLocations == true)
-  {
-    euclid = GeoUtils.getEuclideanCentroid(childLoc);
-    
-  }
   
   mapLoaded = true;
   mode = 1;

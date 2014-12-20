@@ -1,3 +1,9 @@
+/**********************************************************
+| Graph class for timeline display. This creates a graph
+| and draws trendlines depending on how many tweets are
+| retweeted over a given amount of time.
+***********************************************************/
+
 void displayTimelineUI()
 {
   cp7.addBang("main_menu")
