@@ -1,0 +1,3 @@
+Twitter-Tracer
+==============
+Twitter has become one of the leading social networking websites within recent years. It allows information to spread quickly around the world in an instant. Twitter Tracer allows the user to visualize the flow of communication through Twitter. The program tracks how far a user’s status (tweets) travels from one location to another by connecting tweets with retweets over a map. The program also displays a time series of tweets as a number of tweets vs. time graph, which shows the activity and lifespan of retweets. The user can search for tweets using either twitter handles or hashtags, and can specify a time period for the search when searching with user handles.
