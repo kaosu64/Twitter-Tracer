@@ -1,8 +1,13 @@
-/* 
- * Class for creating and drawing the graph for the timeline
- */
+/**********************************************************
+| Graph class for timeline display. This creates a graph
+| and draws trendlines depending on how many tweets are
+| retweeted over a given amount of time.
+***********************************************************/
+
 class Graph
 {
+  //variables for graph location and dimensions
+  //variables for trendline and twitter data
   private float x;
   private float y;
   private float w;
@@ -14,6 +19,7 @@ class Graph
   private StringList xLabels;
   private boolean bMonth;
   
+  //default constructor
   Graph()
   {
     x = 0;
@@ -28,6 +34,7 @@ class Graph
     bMonth = true;
   }
   
+  //draws graph with different trend lines
   Graph(float nx, float ny, float nw, float nh)
   {
     x = nx;
@@ -42,71 +49,85 @@ class Graph
     bMonth = true;
   }
   
+  //sets x position on screen
   void setXPos(float n)
   {
     x = n;
   }
   
+  //sets y position on screen
   void setYPos(float n)
   {
     y = n;
   }
   
+  //sets width size of graph
   void setWidth(float n)
   {
     w = n;
   }
   
+  //sets height size of graph
   void setHeight(float n)
   {
     h = n;
   }
   
+  //sets background color
   void setBGColor(int r, int g, int b)
   {
     clBG = color(r,g,b);
   }
   
+  //sets axis color
   void setAxisColor(int r, int g, int b)
   {
     clAxis = color(r,g,b);
   }
   
+  //sets trendline color
   void setLineColor(int r, int g, int b)
   {
     clLine = color(r,g,b);
   }
   
+  //sets points on graph
   void setPoints(FloatList l)
   {
     points = l;
   }
   
+  //adds a point to graph
   void addPoint(float n)
   {
     points.append(n);
   }
   
+  //remove a point from graph
   float removePoint(int i)
   {
     return points.remove(i);
   }
   
+  //labels the graph
   void setLabels(StringList l)
   {
     xLabels = l;
   }
   
+  //displays graph based on month
   void monthsMode()
   {
     bMonth = true;
   }
   
+  //displays graph based on days
   void daysMode()
   {
     bMonth = false;
   }
   
+  //draws graph on screen
   void drawGraph()
   {
     drawBase();
@@ -114,6 +135,7 @@ class Graph
     drawLabels();
   }
   
+  //draws base of the graph
   private void drawBase()
   {
     fill(clBG);
@@ -125,6 +147,7 @@ class Graph
     line(x,y+h,x+w,y+h);
   }
   
+  //draws each point on the graph
   private void drawPoints()
   {
     stroke(clLine);
@@ -153,6 +176,7 @@ class Graph
     }
   }
   
+  //draws the axis labels
   private void drawLabels()
   {
     fill(clAxis);
