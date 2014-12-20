@@ -1,11 +1,14 @@
 /**********************************************************
-| Graph class for timeline display. This creates a graph
-| and draws trendlines depending on how many tweets are
-| retweeted over a given amount of time.
+| This file sets up the main UI functions of the timeline 
+| display mode. It allows the user to jump back 
+| to the main menu or into map mode. It also allows the 
+| user to switch between displaying months or days
+| on the graph and select a date range for the days display.
 ***********************************************************/
 
 void displayTimelineUI()
 {
+  //main menu button
   cp7.addBang("main_menu")
      .setCaptionLabel("main menu")
      .setPosition(260, 10)
@@ -13,7 +16,8 @@ void displayTimelineUI()
      .getCaptionLabel().align(ControlP5.CENTER, ControlP5.CENTER)
                        .setFont(fontButton);
   cp7.getTooltip().register("main_menu","Return to the main menu.");
-
+  
+  //display map button
   cp7.addBang("display_map")
      .setCaptionLabel("display map")
      .setPosition(580, 10)
@@ -38,6 +42,7 @@ void displayTimelineUI()
   cp7.getTooltip().register("load","Loads last saved tweet data.");
   */
   
+  //button for changing graph to display in months
   cp7.addBang("months")
      .setCaptionLabel("show last 12 months")
      .setPosition(130,height-70)
@@ -45,6 +50,7 @@ void displayTimelineUI()
      .getCaptionLabel().align(ControlP5.CENTER, ControlP5.CENTER)
                        .setFont(fontButton);
   
+  //button for changing graph to display in days
   cp7.addBang("days")
      .setCaptionLabel("show range of 30 days")
      .setPosition(450,height-70)
@@ -52,15 +58,18 @@ void displayTimelineUI()
      .getCaptionLabel().align(ControlP5.CENTER, ControlP5.CENTER)
                        .setFont(fontButton);
   
+  //get 30 days before current date (default value for sliders)
   Calendar cal = Calendar.getInstance();
   cal.add(Calendar.DATE,-29);
   
+  //text label for date selection
   cp7.addTextlabel("labelA")
      .setText("Range starts from:")
      .setPosition(765,height-80)
      .setColorValue(#ffffff)
      .setFont(fontButton);
   
+  //sliders for date selection
   cp7.addSlider("tlYear")
      .setCaptionLabel("year")
      .setPosition(920,height-80)
@@ -92,6 +101,7 @@ void displayTimelineUI()
   cp7.get(Slider.class, "tlDay").getValueLabel().setFont(fontSlider);
 }
 
+//goes to the map display
 public void display_map()
 {
   if (!mapLoaded)
@@ -99,6 +109,7 @@ public void display_map()
   mode = 1;
 }
 
+//changes graph to display in months
 public void months()
 {
   graph.setPoints(rtwMonths);
@@ -106,10 +117,12 @@ public void months()
   graph.monthsMode();
 }
 
+//changes graph to display in days
 public void days()
 {
-  FloatList fl = new FloatList();
-  StringList sl = new StringList();
+  // Lists for rendering graph
+  FloatList fl = new FloatList();  // points
+  StringList sl = new StringList();  // labels
   Calendar c = Calendar.getInstance(),  // search paramter
            cn = Calendar.getInstance();  // counter
   

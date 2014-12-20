@@ -34,7 +34,7 @@ class Graph
     bMonth = true;
   }
   
-  //draws graph with different trend lines
+  //constructor with graph location and dimensions
   Graph(float nx, float ny, float nw, float nh)
   {
     x = nx;
@@ -115,13 +115,13 @@ class Graph
     xLabels = l;
   }
   
-  //displays graph based on month
+  //display mode for graph based on months
   void monthsMode()
   {
     bMonth = true;
   }
   
-  //displays graph based on days
+  //display mode for graph based on days
   void daysMode()
   {
     bMonth = false;
@@ -147,7 +147,7 @@ class Graph
     line(x,y+h,x+w,y+h);
   }
   
-  //draws each point on the graph
+  //draws each point and connecting lines on the graph
   private void drawPoints()
   {
     stroke(clLine);
@@ -185,7 +185,7 @@ class Graph
     textSize(14);
     
     // X-axis labels
-    if (bMonth)
+    if (bMonth)  //determines mode
     {
       text("Month:",x-50,y+h+30);
     }
@@ -205,8 +205,8 @@ class Graph
       inc+=xdiff;
     }
     
-    textSize(14);
     // Y-axis labels
+    textSize(14);
     text("Retweets",x-40,y);
     float ydiff = h / 100;
     for (int i=0; i<100; i+=10)

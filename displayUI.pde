@@ -34,7 +34,7 @@ void displayUI()
                        .setFont(fontButton);
   cp5.getTooltip().register("hashtag","Enters the hashtag to be searched.");
   
-  // Date selection
+  // Start date selection
   Group g1 = cp5.addGroup("sinceGroup")
                 .setCaptionLabel("since date")
                 .setPosition(430,150)
@@ -47,6 +47,7 @@ void displayUI()
                                     .align(ControlP5.CENTER, ControlP5.CENTER)
                                     .setFont(fontButton);
   
+  //sliders for since date
   cp5.addSlider("sinceYear")
      .setCaptionLabel("year")
      .setPosition(10,10)
@@ -92,6 +93,7 @@ void displayUI()
                                     .align(ControlP5.CENTER, ControlP5.CENTER)
                                     .setFont(fontButton);
   
+  //sliders for until date
   cp5.addSlider("untilYear")
      .setCaptionLabel("year")
      .setPosition(10,10)
@@ -216,9 +218,7 @@ public void previous()
   selection = ((selection-5)%buttons.length+buttons.length)%buttons.length;
 }
 
-/*
- * Loads the map for the first time
- */
+// Loads the map for the first time
 public void displaymap()
 {
   //clear all the previous data
@@ -269,9 +269,8 @@ public void displaymap()
   mode = 1;
 }
 
-/*
- * Loads the timeline for the first time
- */
+
+// Loads the timeline for the first time
 public void timeline()
 {
   // Get first selected tweet
@@ -281,6 +280,7 @@ public void timeline()
     n++;
   }
   
+  // Gets list of retweets
   if (n < tweets.length)
   {
     List<Status> rtw = new ArrayList<Status>();
@@ -296,7 +296,7 @@ public void timeline()
       println("Error: "+e+"\n");
     }
     
-    // Initiate float list
+    // Initiate list for tweets by month
     FloatList fl = new FloatList();
     for (int i = 0; i < 12; i++)
     {
@@ -323,12 +323,12 @@ public void timeline()
       {
         fl.add(dCreated.getMonth(), 1);
         rtwDates[dCreated.getMonth()][dCreated.getDate()] += 1.;
-        //println(dCreated.getMonth()+"/"+dCreated.getDate()+": "+rtwDates[dCreated.getMonth()][dCreated.getDate()]);
       }
     }
     
-    FloatList fl2 = new FloatList();
-    StringList sl = new StringList();
+    // Lists for rendering graph
+    FloatList fl2 = new FloatList();  // points
+    StringList sl = new StringList();  // labels
     // Get last year
     Calendar c = Calendar.getInstance(),  // search paramter
              cn = Calendar.getInstance();  // counter

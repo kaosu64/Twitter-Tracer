@@ -28,6 +28,7 @@
 | locations of certain hashtags. Also increased the size
 | of the application. 
 ***************************************/
+
 import org.geonames.*;
 
 import controlP5.*;
@@ -75,6 +76,7 @@ List<Marker> lineMarkers = new ArrayList<Marker>();
 //setting up libraries
 UnfoldingMap map;
 
+//ui elements
 ControlP5 cp5, cp6, cp7;
 Textfield twitterTextField, hashtagMapTextField;
 Textlabel myTextlabelA, myTextlabelB, myTextlabelC;
@@ -83,6 +85,7 @@ PFont fontTweets, fontTextfieldLabel, fontButton, fontGraph, fontSlider;
 Button[] buttons;
 TweetData[] tweets;
 Graph graph;
+//timeline and graph data
 float[][] rtwDates = new float[12][32];
 FloatList rtwMonths = new FloatList();
 StringList rtwMonthsLabel = new StringList();
@@ -92,6 +95,7 @@ Twitter twitter;
 Query query;
 Paging page;
 
+//date storage for sliders
 int sinceYear, sinceMonth, sinceDay,
     untilYear, untilMonth, untilDay,
     tlYear, tlMonth, tlDay;
@@ -113,8 +117,8 @@ void setup()
   smooth();
   frameRate(500);
   
-  //GeoNames account
-  WebService.setUserName("mindbeef");
+  //GeoNames account - Insert username here
+  WebService.setUserName("INSERT_USERNAME");
   
   //background image
   logo = loadImage("data/twitterLogo.png");
@@ -122,10 +126,11 @@ void setup()
   
   //Twitter API setup
   ConfigurationBuilder cb = new ConfigurationBuilder();
-  //cb.setOAuthConsumerKey("xxxx");
-  //cb.setOAuthConsumerSecret("xxxx");
-  //cb.setOAuthAccessToken("xxxx");
-  //cb.setOAuthAccessTokenSecret("xxxx");
+  //Insert Twitter API keys here
+  cb.setOAuthConsumerKey("INSERT_KEY");
+  cb.setOAuthConsumerSecret("INSERT_KEY");
+  cb.setOAuthAccessToken("INSERT_KEY");
+  cb.setOAuthAccessTokenSecret("INSERT_KEY");
   
   twitter = new TwitterFactory(cb.build()).getInstance();
   
